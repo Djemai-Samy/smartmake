@@ -1,7 +1,7 @@
 {
 	"name": "smart-maker",
 	"description": "A flexible app boilerplate generator.",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"license": "MIT",
 	"type": "module",
 	"bin": {
@@ -18,7 +18,7 @@
 		"Djemai Samy"
 	],
 	"files": [
-		"index.js",
+		"lib",
 		"utils"
 	],
 	"scripts": {
