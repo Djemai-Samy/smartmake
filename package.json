@@ -1,12 +1,13 @@
 {
 	"name": "smart-maker",
 	"description": "A flexible app boilerplate generator.",
-	"version": "0.0.3",
+	"version": "0.0.6",
 	"license": "MIT",
 	"type": "module",
+	"main": "./bin/index.js",
 	"bin": {
-		"smart-maker": "./lib/index.js",
-		"smartmake": "./lib/index.js"
+		"smart-maker": "./bin/index.js",
+		"smartmake": "./bin/index.js"
 	},
 	"author": {
 		"name": "Djemai Samy",
@@ -18,11 +19,10 @@
 		"Djemai Samy"
 	],
 	"files": [
-		"lib",
-		"utils"
+		"bin"
 	],
 	"scripts": {
-		"start": "node ./lib/index.js",
+		"start": "node ./bin/index.js",
 		"dev": "ts-node-dev --poll ./src/index.ts",
 		"watch": "rimraf ./lib && tsc -watch -p ./",
 		"format": "prettier --write \"./**/*.{js,json}\""
