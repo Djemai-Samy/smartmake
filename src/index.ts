@@ -6,20 +6,46 @@
  *
  * @author Djemai Samy <djemai-samy>
  */
-
-import init from './utils/init';
-import cli from './utils/cli';
-import log from './utils/log';
-
-const input = cli.input;
-const flags = cli.flags;
-const { clear, debug } = flags;
-
+import inquirer from 'inquirer';
+import { spawn } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { execaCommand } from 'execa';
+import yeoman from 'yeoman-environment';
 (async () => {
-	init({ clear });
-	input.includes(`help`) && cli.showHelp(0);
+	const result = await inquirer.prompt([
+		{ type: 'list', name: 'app', choices: ['React', 'NextJS', 'Flask'] }
+	]);
 
-	input.includes(`test`) && console.log('test');
+	let app = '';
 
-	debug && log(flags);
+	switch (result.app) {
+		case 'NextJS':
+			app = 'next';
+			break;
+		case 'Flask':
+			app = 'flask';
+			break;
+	}
+	const __filename = fileURLToPath(import.meta.url);
+	const __dirname = path.resolve(
+		path.dirname(__filename),
+		'..',
+		'generator-next',
+		'generators',
+		'app'
+	);
+	var env = yeoman.createEnv();
+	env.register(__dirname, 'next:app');
+	env.run('next:app');
 })();
+
+// let yo = spawn(`npx yo ./generator-${app}`, [], {
+// 	shell: true,
+// 	stdio: 'inherit',
+// 	cwd: process.cwd()
+// });
+
+// yo.on('exit', function (code) {
+// 	console.log('child process exited with code ' + code);
+// });

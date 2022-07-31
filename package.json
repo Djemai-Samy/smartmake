@@ -5,6 +5,7 @@
 	"license": "MIT",
 	"type": "module",
 	"main": "./bin/index.js",
+	"types": "./bin/index.d.ts",
 	"bin": {
 		"smart-maker": "./bin/index.js",
 		"smartmake": "./bin/index.js"
@@ -28,15 +29,20 @@
 		"format": "prettier --write \"./**/*.{js,json}\""
 	},
 	"dependencies": {
+		"@types/execa": "^2.0.0",
+		"@types/yeoman-environment": "^2.10.7",
 		"chalk": "^4.1.2",
 		"cli-alerts": "^1.2.2",
 		"cli-handle-error": "^4.4.0",
 		"cli-handle-unhandled": "^1.1.1",
 		"cli-meow-help": "^3.1.0",
 		"cli-welcome": "^2.2.2",
+		"execa": "^6.1.0",
 		"inquirer": "^9.0.2",
 		"meow": "^9.0.0",
-		"ts-node-dev": "^2.0.0"
+		"yeoman-environment": "^3.10.0",
+		"yeoman-generator": "^5.7.0",
+		"yo": "^4.3.0"
 	},
 	"devDependencies": {
 		"@types/inquirer": "^8.2.1",
