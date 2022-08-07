@@ -1,0 +1,21 @@
+{
+    "common": {
+        "ask": {
+            "projectName": "What are we working on today?",
+            "installDeps": "Do you want to install dependecies?",
+            "appName": "What's the name oh the app ?"
+        }
+    },
+    "express": {
+        "ask": {
+            "startServer": "Do you want to start the server?",
+            "options": "And with that?"
+        },
+        "server": {
+            "ready": "Server listening to port 3000..."
+        },
+        "readme": {
+            "runServer": "Run the server"
+        }
+    }
+}

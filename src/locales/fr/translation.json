@@ -1,0 +1,21 @@
+{
+	"common": {
+		"ask": {
+			"projectName": "On travaille sur quoi aujourd'hui?",
+			"installDeps": "Voulez-vous installer les dépendances?",
+			"appName": "Comment voulez bous appelé votre application ?"
+		}
+	},
+	"express": {
+		"ask": {
+			"startServer": "Voulez-vous lancer le serveur?",
+			"options": "Et avec cela ?"
+		},
+		"server": {
+			"ready": "Le serveur est lancé sur le port 3000!"
+		},
+		"readme": {
+			"runServer": "Lancer le serveur"
+		}
+	}
+}
