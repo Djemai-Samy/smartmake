@@ -1,15 +1,40 @@
 {
     "common": {
         "ask": {
-            "projectName": "What are we working on today?",
-            "installDeps": "Do you want to install dependecies?",
-            "appName": "What's the name oh the app ?"
+            "projectName": "What the name og the project ?",
+            "packageManager": "Do you want to use yarn ?",
+            "installDeps": "Do you want to install dependecies ?",
+            "templateName": "What's of app do you want ?",
+            "appName": "What's then name of the app ?",
+            "nameInvalid": "This in an incorrect name! (The name should be all lowercase and can contain only alphanumeric characters, underscores, and hyphens. It must start with a letter and cannot end with a hyphen or underscore.)",
+            "options": "Choose your options:",
+            "useTypescript": "Do You want to use typescript ?",
+            "appNameExists": "A folder with this name already exists!",
+            "useDocker": "Do You want to use Docker ?",
+            "useDockerCompose": "Do You want to use Docker compose ?"
+        },
+        "info": {
+            "usingYarn": "We are using Yarn !",
+            "usingNpm": "We are using npm !",
+            "projectName": "We are building a",
+            "installDeps": "We are going to install the dependecies !",
+            "noInstallDeps": "We are not going to install the dependecies !",
+            "usingTypescript": "We are using Typescript in the project !",
+            "notUsingTypescript": "We are not using Typescript in the project !",
+            "usingJavascript": "We are using Javascript in the project !",
+            "usingDocker": "We are using Docker in the project !",
+            "notUsingDocker": "We are not using Docker in the project !",
+            "usingDockerCompose": "We are using Docker Compose in the project !",
+            "notUsingDockerCompose": "We are not using Docker Compose in the project !"
         }
     },
     "express": {
         "ask": {
             "startServer": "Do you want to start the server?",
             "options": "And with that?"
+        },
+        "info": {
+            "options": "Your options sont: "
         },
         "server": {
             "ready": "Server listening to port 3000..."

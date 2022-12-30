@@ -4,6 +4,12 @@
 node_modules/
 /node_modules/
 
+# Build #
+##########
+/bin
+bin
+bin/**/*
+
 # Packages #
 ############
 *.7z
@@ -18,12 +24,6 @@ node_modules/
 *.tgz
 *.map
 
-# Logs and databases #
-######################
-*.log
-*.sql
-*.env
-
 # OS generated files #
 ######################
 **.DS_Store*
@@ -33,40 +33,12 @@ Thumbs.db
 ._*
 **settings.dat*
 
-# Vim generated files #
+# VS CODE #
 ######################
-*.un~
-
-# SASS #
-##########
-**/.sass-cache
-**/.sass-cache/*
-**/.map
-
-# Composer #
-##########
-!assets/js/vendor/
-wpcs/
-/vendor/
-
-# Bower #
-##########
-assets/bower_components/*
-
-# Codekit #
-##########
-/codekit-config.json
-*.codekit
-**.codekit-cache/*
-
-# Compiled Files and Build Dirs #
-##########
-/README.html
-
-# PhpStrom Project Files #
-.idea/
-library/vendors/composer
-assets/img/.DS_Store
-
-# VSCode related files #
-# .vscode
+.vscode
+.prettierrc.json
+.eslintignore
+.npmignore
+.gitignore
+settings.json
+package-lock.json

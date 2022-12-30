@@ -1,15 +1,39 @@
 {
 	"common": {
 		"ask": {
-			"projectName": "On travaille sur quoi aujourd'hui?",
-			"installDeps": "Voulez-vous installer les dépendances?",
-			"appName": "Comment voulez bous appelé votre application ?"
+			"projectName": "Comment nommé votre projet ?",
+			"packageManager": "Voulez-vous utiliser Yarn ?",
+			"installDeps": "Voulez-vous installer les dépendances ?",
+			"templateName": "Quelle App voulez vous créer ?",
+      "appName":"Comment voulez vous nommer cette App ?",
+			"nameInvalid": "Le nom donné est invalide! (Le nom doit commencer par une minuscule et peut contenir des caractères alphanumerique, underscores. Il doit commencer par une lettre et ne peut pas se terminer avec un underscore.)",
+			"options": "Et avec cela ?",
+			"useTypescript": "Voulez-vous utiliser typescript ?",
+			"appNameExists": "Un dossier portant ce nom existe déja !",
+      "useDocker" :"oulez-vous utiliser Docker ?",
+			"useDockerCompose": "Voulez-vous utiliser Docker compose ?"
+		},
+		"info": {
+			"usingYarn": "Nous allons utiliser Yarn !",
+			"usingNpm": "Nous allons utiliser npm !",
+			"projectName": "Nous allons créer une",
+			"installDeps": "Nous allons installer les dépendances !",
+			"noInstallDeps": "Nous n'allons pas installer les dépendances !",
+			"usingTypescript": "Nous allons utiliser Typescript dans le projet !",
+			"notUsingTypescript": "Nous n'allons pas utiliser Typescript dans le projet !",
+      "usingJavascript" : "We are using Javascript in the project !",
+			"usingDocker": "Nous allons utiliser Docker dans ce projet !",
+			"notUsingDocker": "Nous n'allons pas utiliser Docker dans ce projet !",
+			"usingDockerCompose": "Nous allons utiliser Docker Compose dans ce projet !",
+			"notUsingDockerCompose": "Nous n'allons pas utiliser Docker Compose dans ce projet !"
 		}
 	},
 	"express": {
 		"ask": {
-			"startServer": "Voulez-vous lancer le serveur?",
-			"options": "Et avec cela ?"
+			"startServer": "Voulez-vous lancer le serveur?"
+		},
+		"info": {
+			"options": "Vos options: "
 		},
 		"server": {
 			"ready": "Le serveur est lancé sur le port 3000!"

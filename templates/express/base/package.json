@@ -1,0 +1,56 @@
+{
+	"name": "<%= projectName %>",
+	"version": "1.0.0",
+	"description": "Express app generated with Smartmaker!",
+	"license": "MIT",
+  <%_if(!useTypescript){_%>
+  "type": "module",
+  <%_}_%>
+   "scripts": {
+    <%_if(useTypescript){_%>
+    "dev":"tsc-watch --onSuccess \"node ./dist/index.js\"",
+    "watch":"tsc-watch --noClear",
+    <%_}else{_%>
+    "dev":"nodemon ./src/index.js",
+    <%_}_%>
+    <%_if(useTypescript){_%>
+    "build":"rimraf ./dist && tsc -p ./",
+    <%_}_%>
+    <%_if(useTypescript){_%>
+    "start":"tsc -p ./ && node ./dist/index.js",
+    <%_}else{_%>
+    "start":"node ./src/index.js",
+    <%_}_%>
+    <%_if(useDocker){_%>
+    "docker:dev:build":"docker build --target development --force-rm -t <%= projectName %>-<%= appName %>-dev . ",
+    <%_if(useTypescript){_%>
+    "docker:dev":"<%= packageManager %> run docker:dev:build && docker run --init --rm --name <%= projectName %>-<%= appName %>-dev -p 3000:3000 -v <%= destPath %>/dist:/<%= appName %>/dist <%= projectName %>-<%= appName %>-dev ./node_modules/.bin/nodemon -L ./dist/index.js",
+    <%_}else{_%>
+    "docker:dev":"<%= packageManager %> run docker:dev:build && docker run -t -i --rm --name <%= projectName %>-<%= appName %>-dev -p 3000:3000 -v <%= destPath %>/src:/<%= appName %>/src <%= projectName %>-<%= appName %>-dev ./node_modules/.bin/nodemon -L ./src/index.js",
+    <%_}_%>
+    "docker:remove":"docker rm -f <%= projectName %>-<%= appName %>-prod || true ",
+    "docker:build": "docker build --force-rm -t <%= projectName %>-<%= appName %>-prod . ",
+    "docker:run":"<%= packageManager %> run docker:build && docker run --rm --name <%= projectName %>-<%= appName %>-prod -p 3000:3000 <%= projectName %>-<%= appName %>-express-prod",
+    <%_}_%>
+    <%_if(useDockerCompose){_%>
+    "compose:dev":"docker compose -f docker-compose-dev.yaml up --build",
+    "compose:up": "docker compose up --build",
+    <%_}_%>
+    "ping":"echo Pong"
+	},
+	"devDependencies": {
+    <%_if(useTypescript){_%>
+    "@types/express": "latest",
+    "@types/node": "latest",
+    "tsc-watch": "latest",
+    "typescript": "latest",
+    "tsc": "latest",
+    "rimraf": "latest",
+    <%_}else{_%>
+    <%_}_%>
+    "nodemon":"latest"
+	},
+	"dependencies": {
+		"express": "latest"
+	}
+}
