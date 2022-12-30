@@ -10,18 +10,14 @@ services:
       - '3000:3000'
     volumes:
       <%_if(useTypescript){_%>
-      - ./dist:/<%= appName %>/dist
+      - ./src:/<%= appName %>/src
       <%_}else{_%>
       - ./src:/<%= appName %>/src
       <%_}_%>
     environment:
       - NODE_ENV=development
     command: 
-      - ./node_modules/.bin/nodemon
-      - -L
-      <%_if(useTypescript){_%>
-      - ./dist/index.js
-      <%_}else{_%>
-      - ./src/index.js
-      <%_}_%>
+      - yarn
+      - run
+      - dev
 

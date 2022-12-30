@@ -1,5 +1,5 @@
 import express from 'express';
-import home from './routes/home.route.js';
+import home from './routes/home.route';
 //Server initialization
 const server = express();
 

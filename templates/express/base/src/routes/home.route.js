@@ -1,4 +1,4 @@
-import { getHome } from './../controllers/home.controller.js';
+import { getHome } from './../controllers/home.controller';
 import express, { Router } from 'express';
 
 const router <%=useTypescript ? ": Router " : "" %> = express.Router();

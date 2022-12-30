@@ -13,9 +13,9 @@ COPY . /<%= appName %>
 <%_if(useTypescript){_%>
 RUN <%= packageManager %> run build
 
-CMD ["node", "./dist/index.js"]
+# CMD ["node", "./dist/index.js"]
 <%_ }else{_%>
-CMD ["node", "./src/index.js"]
+# CMD ["node", "./src/index.js"]
 <%_}_%>
 
 

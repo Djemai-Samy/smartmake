@@ -30,6 +30,7 @@ export default class extends BaseGenerator {
 		this.spinner.start();
 		this._search(this._getAppPath());
 		this.spinner.text = "Building the projet...";
+    
     await this.spawnCommand(
 			`cd ${path.join(this._getAppPath())} && ${
 				this.packageManager
@@ -46,33 +47,33 @@ export default class extends BaseGenerator {
 	async end() {
 		if (this.options.start && this.options.useDocker) {
 			//Typescript for Both docker and Compose
-			this._spawnCommand(`${this.packageManager} run watch`, {
-				stdout: (arr) => {
-					this._logLines(arr, (line) => {
-						log(`${chalk.blue("tsc watcher")} : ${line}`);
-					});
-				},
-				stderr: (arr) => {
-					this._logLines(arr, (line) => {
-						magic("tsc watcher", line);
-					});
-				},
-				close: (code, arr) => {
-					this._logLines(arr, (line) => {
-						magic("Closing tsc watcher", "See you later!");
-					});
-				},
-				exit: (code, arr) => {
-					this._logLines(arr, (line) => {
-						magic("Exiting tsc watcher", "Hang on a minute...");
-					});
-				},
-				error: (err) => {
-					magic("Error Name", err.name);
-					magic("Error Message", err.message);
-					magic("Error Stack", err.stack ? err.stack : "");
-				},
-			});
+			// this._spawnCommand(`${this.packageManager} run watch`, {
+			// 	stdout: (arr) => {
+			// 		this._logLines(arr, (line) => {
+			// 			log(`${chalk.blue("tsc watcher")} : ${line}`);
+			// 		});
+			// 	},
+			// 	stderr: (arr) => {
+			// 		this._logLines(arr, (line) => {
+			// 			magic("tsc watcher", line);
+			// 		});
+			// 	},
+			// 	close: (code, arr) => {
+			// 		this._logLines(arr, (line) => {
+			// 			magic("Closing tsc watcher", "See you later!");
+			// 		});
+			// 	},
+			// 	exit: (code, arr) => {
+			// 		this._logLines(arr, (line) => {
+			// 			magic("Exiting tsc watcher", "Hang on a minute...");
+			// 		});
+			// 	},
+			// 	error: (err) => {
+			// 		magic("Error Name", err.name);
+			// 		magic("Error Message", err.message);
+			// 		magic("Error Stack", err.stack ? err.stack : "");
+			// 	},
+			// });
 		}
 	}
 
