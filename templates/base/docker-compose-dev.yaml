@@ -1,0 +1,38 @@
+version: "3.9"
+services: 
+  <%_if(services.express){_%>
+  <%= services.express.appName %>:  
+    build: 
+      context: ./<%= services.express.appName %>
+      target: development
+    image: <%= projectName %>-<%= services.express.appName %>-dev
+    container_name: <%= projectName %>-<%= services.express.appName %>-dev
+    ports:
+      - '<%= services.express.port %>:<%= services.express.port %>'
+    volumes:
+      - ./<%= services.express.appName %>/src:/<%= services.express.appName %>/src
+    environment:
+      - NODE_ENV=development
+    command: 
+      - yarn
+      - run
+      - dev
+  <%_}_%>
+  <%_if(services.react){_%>
+  <%= services.react.appName %>:  
+    build: 
+      context: ./<%= services.react.appName %>
+      target: development
+    image: <%= projectName %>-<%= services.react.appName %>-dev
+    container_name: <%= projectName %>-<%= services.react.appName %>-dev
+    ports:
+      - '<%= services.react.port %>:<%= services.react.port %>'
+    volumes:
+      - ./<%= services.react.appName %>/src:/<%= services.react.appName %>/src
+    environment:
+      - NODE_ENV=development
+    command: 
+      - yarn
+      - run
+      - dev
+  <%_}_%>

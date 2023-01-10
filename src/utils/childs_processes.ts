@@ -33,7 +33,7 @@ export class ChildProcessTracker {
   killAllChilds(code: number){
     this.getChildProcesses().forEach((child)=>{
       if(child.pid){
-        process.kill(child.pid, code)
+        process.kill(child.pid)
       }
     })
   }

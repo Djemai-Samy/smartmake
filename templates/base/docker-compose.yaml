@@ -1,0 +1,27 @@
+version: "3.9"
+services: 
+  <%_if(services.express){_%>
+  <%=services.appName%>:  
+    build: 
+      context: ./<%= services.express.appName %>
+      target: production
+    image: <%= projectName %>-<%= services.express.appName %>-prod
+    container_name: <%= projectName %>-<%= services.express.appName %>-prod
+    ports:
+      - '<%= services.express.port %>:<%= services.express.port %>'
+    environment:
+      - NODE_ENV=production
+  <%_}_%>
+  <%_if(services.react){_%>
+  <%=services.appName%>:  
+    build: 
+      context: ./<%= services.react.appName %>
+      target: production
+    image: <%= projectName %>-<%= services.react.appName %>-prod
+    container_name: <%= projectName %>-<%= services.react.appName %>-prod
+    ports:
+      - '<%= services.react.port %>:<%= services.react.port %>'
+    environment:
+      - NODE_ENV=production
+  <%_}_%>
+

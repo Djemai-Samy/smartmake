@@ -18,6 +18,7 @@ RUN <%= packageManager %> run build
 # CMD ["node", "./src/index.js"]
 <%_}_%>
 
+
 FROM node:16.3.0-alpine as production
 
 ARG NODE_ENV=production

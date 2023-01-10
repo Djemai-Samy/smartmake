@@ -1,20 +1,13 @@
 import Generator from "yeoman-generator";
-import fse from "fs-extra";
-import { lang } from "../../translate.js";
 import path from "path";
-import { spawn, spawnSync } from "child_process";
-import inquirer from "inquirer";
-import { fileURLToPath } from "url";
-import { log, magic } from "../../utils/log.js";
 import fs from "fs";
-import BaseGenerator from "../classes/BaseGenerator.js";
-import chalk from "chalk";
-import header from "../../utils/init.js";
+import BaseGenerator from "./BaseGenerator.js";
+import { lang } from "../translate.js";
 export default class extends BaseGenerator {
 	// The name `constructor` is important here
 	constructor(args: string | string[], opts: Generator.GeneratorOptions) {
 		// Calling the super constructor is important so our generator is correctly set up
-		super(args, opts, "express/typescript");
+		super(args, opts, path.join(opts.template, "typescript"));
 
 		this.appName = this.options.appName;
 	}
@@ -29,19 +22,19 @@ export default class extends BaseGenerator {
 	async install() {
 		this.spinner.start();
 		this._search(this._getAppPath());
-		this.spinner.text = "Building the projet...";
-    
-    await this.spawnCommand(
-			`cd ${path.join(this._getAppPath())} && ${
-				this.packageManager
-			} run build`,
-			[],
-			{
-				shell: true,
-				stdio: "ignore",
-				// cwd: process.cwd()
-			}
-		);
+		// this.spinner.text = "Building the projet...";
+
+		// await this.spawnCommand(
+		// 	`cd ${path.join(this._getAppPath())} && ${
+		// 		this.packageManager
+		// 	} run build`,
+		// 	[],
+		// 	{
+		// 		shell: true,
+		// 		stdio: "ignore",
+		// 		// cwd: process.cwd()
+		// 	}
+		// );
 		this.spinner.stop();
 	}
 	async end() {
@@ -78,8 +71,12 @@ export default class extends BaseGenerator {
 	}
 
 	private _changeExtension = (file: string) => {
-		const newFile = file.replace(/\.js$/, ".ts"); // Replace the js extension with ts
-		fs.renameSync(file, newFile); // Rename the file
+		const newFile = file.replace(
+			/\.jsx?$/,
+			path.extname(file) === ".js" ? ".ts" : ".tsx"
+		); // Replace the js extension with ts
+		
+    fs.renameSync(file, newFile); // Rename the file
 
 		this.spinner.text = `${file.split(path.sep).pop()} to ${newFile
 			.split(path.sep)
@@ -96,7 +93,7 @@ export default class extends BaseGenerator {
 			const stats = fs.statSync(filePath); // Get the file stats
 			if (stats.isFile()) {
 				// If the file is a regular file
-				if (path.extname(file) === ".js") {
+				if (path.extname(file) === ".js" || path.extname(file) === ".jsx") {
 					// If the file has a .js extension
 					this._changeExtension(filePath); // Change the extension to .ts
 				}

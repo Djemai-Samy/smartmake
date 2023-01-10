@@ -1,31 +1,31 @@
 import inquirer from "inquirer";
 
-export const confirm = async (name:string, message:string, defaultValue: boolean) => {
+export const confirm = async (message:string, defaultValue: boolean) => {
   console.log()
   let resp = await inquirer.prompt([
     {
       type: 'confirm',
-      name: name,
+      name: "confirm",
       message: message,
       default: defaultValue
     }
   ]);
 
-  return resp[name]
+  return resp.confirm
 }
 
-export const choices = async ( name:string, message:string, listchoices: Array<string>) =>{
+export const checkbox = async (message:string, listchoices: Array<string>) =>{
   console.log()
   const resp = await inquirer.prompt([
     {
-      type: 'list',
-      name: name,
+      type: 'checkbox',
+      name: "list",
       choices: listchoices,
       message: message
     }
   ]);
 
-  return resp[name];
+  return resp.list;
 }
 
 export const ask = async ( name:string, message:string, defaultValue: string) =>{
@@ -40,4 +40,17 @@ export const ask = async ( name:string, message:string, defaultValue: string) =>
   ]);
 
   return resp[name];
+}
+
+export const list = async(message: string, choices:string[]) => {
+  const resp = await inquirer.prompt([
+    {
+      type:"list",
+      name:"choices",
+      choices,
+      message
+    }
+  ])
+
+  return resp.choices;
 }

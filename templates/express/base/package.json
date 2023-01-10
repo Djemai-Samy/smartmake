@@ -1,5 +1,5 @@
 {
-	"name": "<%= projectName %>",
+	"name": "<%= appName %>",
 	"version": "1.0.0",
 	"description": "Express app generated with Smartmaker!",
 	"license": "MIT",
@@ -22,10 +22,10 @@
     <%_}_%>
     <%_if(useDocker){_%>
     "docker:dev:build":"docker build --target development --force-rm -t <%= projectName %>-<%= appName %>-dev . ",
-    "docker:dev":"<%= packageManager %> run docker:dev:build && docker run -i --rm --name <%= projectName %>-<%= appName %>-dev -p 3000:3000 -v <%= destPath %>/src:/<%= appName %>/src <%= projectName %>-<%= appName %>-dev yarn run dev",
+    "docker:dev":"<%= packageManager %> run docker:dev:build && docker run -i --rm --name <%= projectName %>-<%= appName %>-dev -p <%= port %>:<%= port %> -v <%= destPath %>/src:/<%= appName %>/src <%= projectName %>-<%= appName %>-dev yarn run dev",
     "docker:remove":"docker rm -f <%= projectName %>-<%= appName %>-prod || true ",
     "docker:build": "docker build --force-rm -t <%= projectName %>-<%= appName %>-prod . ",
-    "docker:run":"<%= packageManager %> run docker:build && docker run --rm --name <%= projectName %>-<%= appName %>-prod -p 3000:3000 <%= projectName %>-<%= appName %>-express-prod",
+    "docker:run":"<%= packageManager %> run docker:build && docker run --rm --name <%= projectName %>-<%= appName %>-prod -p <%= port %>:<%= port %> <%= projectName %>-<%= appName %>-prod",
     <%_}_%>
     <%_if(useDockerCompose){_%>
     "compose:dev":"docker compose -f docker-compose-dev.yaml up --build",
@@ -35,17 +35,17 @@
 	},
 	"devDependencies": {
     <%_if(useTypescript){_%>
-    "@types/express": "latest",
-    "@types/node": "latest",
-    "ts-node-dev": "latest",
-    "typescript": "latest",
-    "tsc": "latest",
+    "@types/express": "*",
+    "@types/node": "*",
+    "ts-node-dev": "*",
+    "typescript": "*",
+    "tsc": "*",
     <%_}else{_%>
-    "nodemon":"latest",
+    "nodemon":"*",
     <%_}_%>
-    "rimraf": "latest"
+    "rimraf": "*"
 	},
 	"dependencies": {
-		"express": "latest"
+		"express": "*"
 	}
 }

@@ -79,8 +79,8 @@ const flags = {
 
 const commands = {
 	help: { desc: `Print help info` },
-	express: { desc: "Creating an ExpressJS project" },
-	react: { desc: "Creating a ReactJS project" },
+	// express: { desc: "Creating an ExpressJS project" },
+	// react: { desc: "Creating a ReactJS project" },
 };
 
 const helpText = meowHelp({

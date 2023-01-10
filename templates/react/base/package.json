@@ -1,0 +1,45 @@
+{
+  "name": "<%= appName %>",
+  "version": "1.0.0",
+  "description": "React app generated with Smartmaker!",
+  "scripts": {
+    "dev": "webpack-dev-server --mode=development --open",
+    "watch": "webpack --watch --mode=development",
+    "build": "webpack --mode=production",
+    <%_if(useDocker){_%>
+    "docker:dev:build":"docker build --target development --force-rm -t <%= projectName %>-<%= appName %>-dev . ",
+    "docker:dev":"<%= packageManager %> run docker:dev:build && docker run -i --rm --name <%= projectName %>-<%= appName %>-dev -p <%= port %>:<%= port %> -v <%= destPath %>/src:/<%= appName %>/src <%= projectName %>-<%= appName %>-dev yarn run dev",
+    "docker:remove":"docker rm -f <%= projectName %>-<%= appName %>-prod || true ",
+    "docker:build": "docker build --force-rm -t <%= projectName %>-<%= appName %>-prod . ",
+    "docker:run":"<%= packageManager %> run docker:build && docker run --rm --name <%= projectName %>-<%= appName %>-prod -p <%= port %>:<%= port %> <%= projectName %>-<%= appName %>-prod",
+    <%_}_%>
+    "ping":"echo Pong"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "*",
+    "react-dom": "*"
+  },
+  "devDependencies": {
+    <%_if(useTypescript){_%>
+    "typescript": "*",
+    "tsc": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "@babel/preset-typescript": "*",
+    "ts-node": "*",
+    <%_}_%>
+    "@babel/core": "*",
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "babel-loader": "*",
+    "css-loader": "*",
+    "file-loader": "*",
+    "html-webpack-plugin": "*",
+    "style-loader": "*",
+    "webpack": "*",
+    "webpack-cli": "*",
+    "webpack-dev-server":"*"
+  }
+}

@@ -2,45 +2,59 @@
 	"common": {
 		"ask": {
 			"projectName": "What the name og the project ?",
-      "packageManager":"Do you want to use yarn ?",
+			"packageManager": "Do you want to use yarn ?",
 			"installDeps": "Do you want to install dependecies ?",
 			"templateName": "What's of app do you want ?",
-			"appName": "What's then name of the app ?",
-      "nameInvalid":"This in an incorrect name! (The name should be all lowercase and can contain only alphanumeric characters, underscores, and hyphens. It must start with a letter and cannot end with a hyphen or underscore.)",
-      "options": "Choose your options:",
-      "useTypescript": "Do You want to use typescript ?",
-      "appNameExists":"A folder with this name already exists!",
-      "useDocker" :"Do You want to use Docker ?",
-      "useDockerCompose" :"Do You want to use Docker compose ?"
+			"options": "Choose your options:",
+			"useTypescript": "Do You want to use typescript ?",
+			"useDocker": "Do You want to use Docker ?",
+			"useDockerCompose": "Do You want to use Docker compose ?",
+			"startServer": "Do you want to start the server?"
 		},
-    "info":{
-      "usingYarn":"We are using Yarn !",
-      "usingNpm":"We are using npm !",
-      "projectName":"We are building a",
-      "installDeps" : "We are going to install the dependecies !",
-      "noInstallDeps" : "We are not going to install the dependecies !",
-      "usingTypescript" : "We are using Typescript in the project !",
-      "notUsingTypescript" : "We are not using Typescript in the project !",
-      "usingJavascript" : "We are using Javascript in the project !",
-      "usingDocker" : "We are using Docker in the project !",
-      "notUsingDocker" : "We are not using Docker in the project !",
-      "usingDockerCompose" : "We are using Docker Compose in the project !",
-      "notUsingDockerCompose" : "We are not using Docker Compose in the project !"
-    }
+		"info": {
+			"usingYarn": "We are using Yarn !",
+			"usingNpm": "We are using npm !",
+			"projectName": "We are building a",
+			"installDeps": "We are going to install the dependecies !",
+			"noInstallDeps": "We are not going to install the dependecies !",
+			"usingTypescript": "We are using Typescript in the project !",
+			"notUsingTypescript": "We are not using Typescript in the project !",
+			"usingJavascript": "We are using Javascript in the project !",
+			"usingDocker": "We are using Docker in the project !",
+			"notUsingDocker": "We are not using Docker in the project !",
+			"usingDockerCompose": "We are using Docker Compose in the project !",
+			"notUsingDockerCompose": "We are not using Docker Compose in the project !"
+		},
+    "error":{
+      "nameInvalid": "Ce nom n'est pas correct ! (Le nom doit être en minuscules et ne doit contenir que des caractères alphanumériques, des underscores et des tirets. Il doit commencer par une lettre et ne peut pas se terminer par un tiret ou un underscore.)",
+      "appNameExists": "Un dossier avec ce nom existe déjà !"
+    },
+		"server": {
+			"ready": "The server is running on port",
+      "error":{
+        "port":"This is not a valid port!",
+        "portUsed":"This port is already taken by another app!"
+      }
+		}
 	},
 	"express": {
 		"ask": {
-			"startServer": "Do you want to start the server?",
-			"options": "And with that?"
+			"appName": "What's then name of the ExpressJS app ?"
 		},
-    "info":{
-      "options":"Your options sont: "
-    },
-		"server": {
-			"ready": "Server listening to port 3000..."
-		},
+		"info": {},
+		"server": {},
 		"readme": {
 			"runServer": "Run the server"
+		}
+	},
+	"react": {
+		"ask": {
+			"appName": "What's then name of the ReactJS app ?"
+		},
+		"info": {},
+		"server": {},
+		"readme": {
+			"runServer": "Lancer le serveur"
 		}
 	}
 }

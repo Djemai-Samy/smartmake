@@ -1,21 +1,23 @@
-import { ChildProcess, ChildProcessWithoutNullStreams, exec, spawn } from "child_process";
+import { ChildProcessWithoutNullStreams,spawn } from "child_process";
 import ora from "ora";
 import path from "path";
 import { fileURLToPath } from "url";
-import { runInThisContext } from "vm";
 import Generator from "yeoman-generator";
-import { lang } from "../../translate.js";
-import { ChildProcessTracker } from "../../utils/childs_processes.js";
-import { log } from "../../utils/log.js";
+import { ChildProcessTracker } from "../utils/childs_processes.js";
+import { log } from "../utils/log.js";
+import { ServicesTracker } from "./apps/ServicesTracker.js";
+
 
 export default class BaseGenerator extends Generator {
 	text: typeof import("i18next") | undefined;
+	__filename = fileURLToPath(import.meta.url);
   templateFolderPath: string;
 	destinationFolderPath: string;
 	projectName: string;
   appName: string = "app";
 	packageManager: string;
 	tracker = ChildProcessTracker.getInstance();
+	services = ServicesTracker.getInstance();
 	//Loading helper
 	spinner = ora("");
 	constructor(
@@ -30,7 +32,6 @@ export default class BaseGenerator extends Generator {
 		this.templateFolderPath = path.resolve(
 			path.dirname(__filename),
 			`..`,
-			"..",
 			"..",
 			"templates",
 			templateName
@@ -49,7 +50,8 @@ export default class BaseGenerator extends Generator {
 	// Get a process and assign eventListeners (stdout, sterr, error, exit, close)
 	private _handleChildEvent = (
 		ls: ChildProcessWithoutNullStreams,
-		callbacks: ProcessCallbacks
+		callbacks: ProcessCallbacks,
+     exit?:boolean
 	) => {
 		
 		ls.stdout?.on("data", (data: any) => {
@@ -71,7 +73,7 @@ export default class BaseGenerator extends Generator {
 			let arr = ["close"];
 			callbacks.close(code, arr);
 			this.tracker.removeChildProcess(ls);
-			if (this.tracker.getChildProcesses().length === 0) {
+			if (this.tracker.getChildProcesses().length === 0 && exit === undefined) {
 				process.exit();
 			}
 			this.spinner.stop();
@@ -86,11 +88,12 @@ export default class BaseGenerator extends Generator {
 	};
 
 	// Spawn a command in the app folder and add listeners
-	protected _spawnCommand(command: string, callbacks: ProcessCallbacks) {
-		this.spinner.stop();
+	protected _spawnCommand(commandPath:string, command: string, callbacks: ProcessCallbacks, exit?:boolean) {
+		
+    this.spinner.stop();
 
 		const nodemonProcess = spawn(
-			`cd ${path.join(this._getAppPath())} && ${command}`,
+			`cd ${commandPath} && ${command}`,
 			[],
 			{
 				shell: true,
@@ -101,8 +104,17 @@ export default class BaseGenerator extends Generator {
 
 		this.tracker.addChildProcess(nodemonProcess);
 
-		this._handleChildEvent(nodemonProcess, callbacks);
+		this._handleChildEvent(nodemonProcess, callbacks, exit);
 	}
+
+  protected _spawnCommandApp(command:string, callbacks: ProcessCallbacks, exit?:boolean){
+
+    this._spawnCommand(this._getAppPath(), command, callbacks, exit);
+  }
+
+  protected _spawnCommandProject(command:string, callbacks: ProcessCallbacks, exit?:boolean){
+    this._spawnCommand(this._getProjectPath(), command, callbacks, exit);
+  }
 
 	//Helpers:
 
@@ -122,13 +134,15 @@ export default class BaseGenerator extends Generator {
   protected _getAppPath(){
     return path.join(this._getProjectPath(), this.appName);
   }
+
 }
 
-type ProcessCallbacks = {
-	stdout: (data: string[]) => void;
-	stderr: (data: string[]) => void;
-	close: (code: number, data: string[]) => void;
-	exit: (code: number, data: string[]) => void;
-	error: (data: { name: string; message: string; stack?: string | undefined }) => void;
-};
 
+
+export type ProcessCallbacks = {
+  stdout: (data: string[]) => void;
+  stderr: (data: string[]) => void;
+  close: (code: number, data: string[]) => void;
+  exit: (code: number, data: string[]) => void;
+  error: (data: { name: string; message: string; stack?: string | undefined }) => void;
+};
