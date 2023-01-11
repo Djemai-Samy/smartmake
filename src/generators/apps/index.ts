@@ -51,15 +51,25 @@ export default class ProjectGenerator extends BaseGenerator {
     //   services: this.services,
     // });
 
-		if (this.options.useDockerCompose) {
+		if (this.options.useDocker) {
+      
 			this.fs.copyTpl(`${this.templateFolderPath}/**/*`, this._getProjectPath(), {
 				projectName: this.projectName,
 				text: text,
 				packageManager: this.options.useYarn ? "yarn" : "npm",
 				useTypescript: this.options.useTypescript,
-				services: this.services,
+				services: this.services.getServices(),
 			});
 		}
+
+    this.fs.copyTpl(`${this.templateFolderPath}/package.json`, `${this._getProjectPath()}/package.json`, {
+      projectName: this.projectName,
+      text: text,
+      packageManager: this.options.useYarn ? "yarn" : "npm",
+      useTypescript: this.options.useTypescript,
+      useDocker:this.options.useDocker,
+      services: this.services.getServices(),
+    }, {}, {});
 	}
 	async install() {}
 	async end() {
@@ -67,7 +77,7 @@ export default class ProjectGenerator extends BaseGenerator {
 		const start = await confirm(text.t("common.ask.startServer"), true);
 		if (start) {
 			this.generators.forEach((gen) => (gen.generator.options.start = true));
-			if (this.options.useDockerCompose) {
+			if (this.options.useDocker) {
 				//Docker Compose
 				this._spawnCommandProject(`${this.packageManager} run compose:dev`, {
 					stdout: (arr) => {
@@ -131,23 +141,11 @@ export default class ProjectGenerator extends BaseGenerator {
 	private async _parseDocker() {
 		const dockerExist = await checkCommand("docker");
 		const dockerComposeExist = await checkCommand("docker-compose");
-		if (dockerExist) {
-			this.options.flags.useDocker ? (this.options.useDocker = true) : null;
+		if (dockerExist && dockerComposeExist) {
+			this.options.flags.docker ? (this.options.useDocker = true) : null;
 			this.options.flags.noDocker ? (this.options.useDocker = false) : null;
-
-			if (dockerComposeExist) {
-				this.options.flags.useDockerCompose
-					? (this.options.useDockerCompose = true)
-					: null;
-				this.options.flags.noDockerCompose
-					? (this.options.useDockerCompose = false)
-					: null;
-			} else {
-				this.options.useDockerCompose = false;
-			}
 		} else {
 			this.options.useDocker = false;
-			this.options.useDockerCompose = false;
 		}
 	}
 
@@ -212,7 +210,6 @@ export default class ProjectGenerator extends BaseGenerator {
 		await this._askPackageManager(text.t("common.ask.packageManager"));
 		await this._askInstallDeps(text.t("common.ask.installDeps"));
 		await this._askDocker(text.t("common.ask.useDocker"));
-		await this._askDockerCompose(text.t("common.ask.useDockerCompose"));
 	}
 
 	private async _askTypescript(text: string) {

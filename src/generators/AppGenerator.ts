@@ -146,39 +146,39 @@ export default class extends BaseGenerator {
 		});
 
 		if (this.options.useDocker) {
+			// log(`${chalk.blue.bold("-----------------------------------")}`);
+			// header({
+			// 	title: `Docker cotainer`,
+			// 	tagLine: `Simple Development Environment`,
+			// 	description: [
+			// 		`${
+			// 			chalk.green(` ${this.packageManager} run docker:build:dev `) +
+			// 			": Remove old Dev Mode image and build new Dev Mode image."
+			// 		}`,
+			// 		`${chalk.green(
+			// 			` ${this.packageManager} run docker:dev`
+			// 		)} : Build the Dev Mode image and run a container with Hot Reload (Removed when exit).`,
+			// 		`${
+			// 			chalk.magenta(` ${this.packageManager}  docker:build `) +
+			// 			` : 'Build the Prod Image.`
+			// 		}`,
+			// 		`${
+			// 			chalk.magenta(` ${this.packageManager}  docker:run `) +
+			// 			` : 'Build the Prod Image and deploy the Prod Container.`
+			// 		}`,
+			// 		`${
+			// 			chalk.red(` ${this.packageManager} docker:remove `) +
+			// 			" : Remove the Prod Container."
+			// 		}`,
+			// 	],
+			// 	version: "",
+			// 	bgColor: "#36BB09",
+			// 	color: "#000000",
+			// 	bold: true,
+			// 	clear: false,
+			// });
 			log(`${chalk.blue.bold("-----------------------------------")}`);
-			header({
-				title: `Docker cotainer`,
-				tagLine: `Simple Development Environment`,
-				description: [
-					`${
-						chalk.green(` ${this.packageManager} run docker:build:dev `) +
-						": Remove old Dev Mode image and build new Dev Mode image."
-					}`,
-					`${chalk.green(
-						` ${this.packageManager} run docker:dev`
-					)} : Build the Dev Mode image and run a container with Hot Reload (Removed when exit).`,
-					`${
-						chalk.magenta(` ${this.packageManager}  docker:build `) +
-						` : 'Build the Prod Image.`
-					}`,
-					`${
-						chalk.magenta(` ${this.packageManager}  docker:run `) +
-						` : 'Build the Prod Image and deploy the Prod Container.`
-					}`,
-					`${
-						chalk.red(` ${this.packageManager} docker:remove `) +
-						" : Remove the Prod Container."
-					}`,
-				],
-				version: "",
-				bgColor: "#36BB09",
-				color: "#000000",
-				bold: true,
-				clear: false,
-			});
-			log(`${chalk.blue.bold("-----------------------------------")}`);
-			if (this.options.useDockerCompose) {
+			if (this.options.useDocker) {
 				header({
 					title: `Docker Compose`,
 					tagLine: `Simple Development Environment`,

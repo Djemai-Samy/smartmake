@@ -26,7 +26,8 @@ const { clear, debug } = flags;
 
 	input.includes(`help`) && cli.showHelp(0);
 
-	debug && log(flags);
+	//  log(flags);
+
 
 	const options: Options = {
 		lang: flags.language,
@@ -36,10 +37,8 @@ const { clear, debug } = flags;
 		useNpm: flags.useNpm,
 		install: flags.install,
 		noInstall: flags.noInstall,
-		useDocker: flags.useDocker,
+		useDocker: flags.docker,
 		noDocker: flags.noDocker,
-		useDockerCompose: flags.useDockerCompose,
-		noDockerCompose: flags.noDockerCompose,
 	} as Options;
 
 	const generatorOptions: GeneratorOptions = {
@@ -47,7 +46,6 @@ const { clear, debug } = flags;
 		useYarn: undefined,
 		install: undefined,
 		useDocker: undefined,
-		useDockerCompose: undefined,
 	};
 
 	const __filename = fileURLToPath(import.meta.url);

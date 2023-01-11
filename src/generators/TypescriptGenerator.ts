@@ -89,11 +89,12 @@ export default class extends BaseGenerator {
 		}
 		const files = fs.readdirSync(dir); // Get a list of all files in the directory
 		files.forEach((file) => {
+      
 			const filePath = path.join(dir, file); // Construct the full file path
 			const stats = fs.statSync(filePath); // Get the file stats
 			if (stats.isFile()) {
 				// If the file is a regular file
-				if (path.extname(file) === ".js" || path.extname(file) === ".jsx") {
+				if ((path.extname(file) === ".js" || path.extname(file) === ".jsx") && file !== "webpack.config.js") {
 					// If the file has a .js extension
 					this._changeExtension(filePath); // Change the extension to .ts
 				}

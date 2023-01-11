@@ -1,7 +1,7 @@
 version: "3.9"
 services: 
   <%_if(services.express){_%>
-  <%=services.appName%>:  
+  <%= services.express.appName %>:  
     build: 
       context: ./<%= services.express.appName %>
       target: production
@@ -13,7 +13,7 @@ services:
       - NODE_ENV=production
   <%_}_%>
   <%_if(services.react){_%>
-  <%=services.appName%>:  
+  <%= services.react.appName %>:  
     build: 
       context: ./<%= services.react.appName %>
       target: production

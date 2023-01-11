@@ -31,6 +31,7 @@ services:
       - ./<%= services.react.appName %>/src:/<%= services.react.appName %>/src
     environment:
       - NODE_ENV=development
+      - DOCKER_PROXY=true
     command: 
       - yarn
       - run

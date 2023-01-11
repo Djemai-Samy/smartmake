@@ -58,7 +58,7 @@ const flags = {
 		type: `boolean`,
 		desc: `Don't install dependencies`,
 	},
-	useDocker: {
+	docker: {
 		type: `boolean`,
 		alias: `d`,
 		desc: `Use docker for the project`,
@@ -66,14 +66,6 @@ const flags = {
 	noDocker: {
 		type: `boolean`,
 		desc: `Don't use docker for the project`,
-	},
-	useDockerCompose: {
-		type: `boolean`,
-		desc: `Use docker compose for the project`,
-	},
-	noDockerCompose: {
-		type: `boolean`,
-		desc: `Don't use docker compose for the project`,
 	},
 } as AnyFlags;
 
@@ -115,8 +107,6 @@ export type Options = {
 	noInstall: boolean;
 	useDocker: boolean;
 	noDocker: boolean;
-	useDockerCompose: boolean;
-	noDockerCompose: boolean;
 };
 
 export type GeneratorOptions = {
@@ -124,5 +114,4 @@ export type GeneratorOptions = {
 	useYarn: boolean | undefined;
 	install: boolean | undefined;
 	useDocker: boolean | undefined;
-	useDockerCompose: boolean | undefined;
 };

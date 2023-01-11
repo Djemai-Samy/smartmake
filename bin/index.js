@@ -19,7 +19,6 @@ import yeoman from "yeoman-environment";
 import { fileURLToPath } from "url";
 import init from "./utils/init.js";
 import cli from "./utils/cli.js";
-import { log } from "./utils/log.js";
 import { ChildProcessTracker } from "./utils/childs_processes.js";
 const input = cli.input;
 const flags = cli.flags;
@@ -31,7 +30,7 @@ const { clear, debug } = flags;
         tracker.killAllChilds(0);
     });
     input.includes(`help`) && cli.showHelp(0);
-    debug && log(flags);
+    //  log(flags);
     const options = {
         lang: flags.language,
         useTypescript: flags.useTypescript,
@@ -40,17 +39,14 @@ const { clear, debug } = flags;
         useNpm: flags.useNpm,
         install: flags.install,
         noInstall: flags.noInstall,
-        useDocker: flags.useDocker,
+        useDocker: flags.docker,
         noDocker: flags.noDocker,
-        useDockerCompose: flags.useDockerCompose,
-        noDockerCompose: flags.noDockerCompose,
     };
     const generatorOptions = {
         useTypescript: undefined,
         useYarn: undefined,
         install: undefined,
         useDocker: undefined,
-        useDockerCompose: undefined,
     };
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.resolve(path.dirname(__filename), `generators`, "apps");
