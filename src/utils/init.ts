@@ -40,11 +40,10 @@ export default (options: any) => {
   console.log(
     `${clr(`${bg(` ${title} `)}`)} ${version} ${dim(tagLine)}\n\n${
       
-      description.join('\n\n')
+      description.length ? description?.join('\n\n'): description
     
     }`
   );
-  console.log();
   console.log(`${chalk.bgBlack.underline('                                    ')}`)
   console.log();
 };

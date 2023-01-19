@@ -6,7 +6,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = (env) => {
 
   const buildFolderName = '<%= services.express && !useDocker ? "public" : "build" %>';
-  console.log(process.env);
   <%_if(services.express){_%>
   <%_if(useDocker){_%>
   const proxyPath = `http://${process.env.DOCKER_PROXY ? "<%= `${projectName}-${services.express.appName}-dev` %>": "localhost" }:<%= services.express.port %>`;

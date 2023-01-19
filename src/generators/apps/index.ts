@@ -13,13 +13,17 @@ import chalk from "chalk";
 import { getGenerator } from "./AppFactory.js";
 import { Services, ServicesTracker } from "./ServicesTracker.js";
 import { testAppName } from "../../utils/validation.js";
+import header from "../../utils/init.js";
+import ora from "ora";
 export default class ProjectGenerator extends BaseGenerator {
 	generators: { name: string; generator: Generator }[] = [];
 
 	// The name `constructor` is important here
 	constructor(args: string | string[], opts: Generator.GeneratorOptions) {
 		// Calling the super constructor is important so our generator is correctly set up
+    
 		super(args, opts, "base");
+		this.color = "#4AABEE";
 	}
 
 	async prompting() {
@@ -40,19 +44,18 @@ export default class ProjectGenerator extends BaseGenerator {
 		this._loadAppGenerators();
 	}
 	async writing() {
-    fse.mkdir(`${this.projectName}`);
+		fse.mkdir(`${this.projectName}`);
 		const text = await lang.getInstance(this.options.lang);
-    
-    // this.fs.copyTpl(`${this.templateFolderPath}/package.json`, this._getProjectPath(), {
-    //   projectName: this.projectName,
-    //   text: text,
-    //   packageManager: this.options.useYarn ? "yarn" : "npm",
-    //   useTypescript: this.options.useTypescript,
-    //   services: this.services,
-    // });
+
+		// this.fs.copyTpl(`${this.templateFolderPath}/package.json`, this._getProjectPath(), {
+		//   projectName: this.projectName,
+		//   text: text,
+		//   packageManager: this.options.useYarn ? "yarn" : "npm",
+		//   useTypescript: this.options.useTypescript,
+		//   services: this.services,
+		// });
 
 		if (this.options.useDocker) {
-      
 			this.fs.copyTpl(`${this.templateFolderPath}/**/*`, this._getProjectPath(), {
 				projectName: this.projectName,
 				text: text,
@@ -62,46 +65,101 @@ export default class ProjectGenerator extends BaseGenerator {
 			});
 		}
 
-    this.fs.copyTpl(`${this.templateFolderPath}/package.json`, `${this._getProjectPath()}/package.json`, {
-      projectName: this.projectName,
-      text: text,
-      packageManager: this.options.useYarn ? "yarn" : "npm",
-      useTypescript: this.options.useTypescript,
-      useDocker:this.options.useDocker,
-      services: this.services.getServices(),
-    }, {}, {});
+		this.fs.copyTpl(
+			`${this.templateFolderPath}/package.json`,
+			`${this._getProjectPath()}/package.json`,
+			{
+				projectName: this.projectName,
+				text: text,
+				packageManager: this.options.useYarn ? "yarn" : "npm",
+				useTypescript: this.options.useTypescript,
+				useDocker: this.options.useDocker,
+				services: this.services.getServices(),
+			},
+			{},
+			{}
+		);
 	}
 	async install() {}
 	async end() {
 		const text = await lang.getInstance(this.options.lang);
+		if (this.options.useDocker) {
+			header({
+				title: `Docker Compose`,
+				tagLine: `cd ${this.projectName}`,
+				description: [
+					`${chalk.magenta(` ${this.packageManager} run compose:dev`)} : ${text.t(
+						"compose.commands.dev"
+					)}`,
+					`${chalk.magenta(` ${this.packageManager} run compose:up`)} : ${text.t(
+						"compose.commands.up"
+					)}`,
+				],
+				version: "",
+				bgColor: this.color,
+				color: "#000000",
+				bold: true,
+				clear: false,
+			});
+		}
+
+		if (!this.options.install) {
+			return;
+		}
+
 		const start = await confirm(text.t("common.ask.startServer"), true);
 		if (start) {
 			this.generators.forEach((gen) => (gen.generator.options.start = true));
+
 			if (this.options.useDocker) {
-				//Docker Compose
-				this._spawnCommandProject(`${this.packageManager} run compose:dev`, {
-					stdout: (arr) => {
-						this._logLines(arr, (line) => {
-							log(`${chalk.blue("[DOCKER COMPOSE]")} :  ${line}`);
-						});
-					},
-					stderr: (arr) => {
-						this._logLines(arr, (line) => {
-							magic("[DOCKER COMPOSE]", line);
-						});
-					},
-					close: (code, arr) => {
-						magic("[DOCKER COMPOSE]", "Closed, See you later!");
-					},
-					exit: (code, arr) => {
-						magic("[DOCKER COMPOSE]", "Stoppings, Hang on a minute...");
-					},
-					error: (err) => {
-						magic("Error Name", err.name);
-						magic("Error Message", err.message);
-						magic("Error Stack", err.stack ? err.stack : "");
-					},
+				const spinner = ora("Stating server...");
+
+				spinner.start();
+
+				await new Promise<void>((resolve, reject) => {
+					this._spawnCommandProject(`${this.packageManager} run compose:dev`, {
+						stdout: (arr) => {
+							this._logCompose(arr, spinner);
+						},
+
+						stderr: (arr) => {
+							this._logCompose(arr, spinner);
+						},
+						exit: (code, arr) => {
+							spinner.clear();
+							header({
+								title: `[DOCKER COMPOSE] ${this.appName}`,
+								tagLine: `Stopping...`,
+								description: "",
+								version: "",
+								bgColor: this.color,
+								color: "#000000",
+								bold: true,
+								clear: false,
+							});
+						},
+						close: (code, arr) => {
+							spinner.clear();
+							header({
+								title: `[DOCKER COMPOSE] ${this.appName}`,
+								tagLine: `Closed!`,
+								description: "",
+								version: "",
+								bgColor: this.color,
+								color: "#000000",
+								bold: true,
+								clear: false,
+							});
+						},
+						error: (err) => {
+							magic("Error Name", err.name);
+							magic("Error Message", err.message);
+							magic("Error Stack", err.stack ? err.stack : "");
+						},
+					});
 				});
+
+				spinner.stop();
 			}
 		}
 	}
@@ -187,18 +245,21 @@ export default class ProjectGenerator extends BaseGenerator {
 
 			projectName = await ask("projectName", text.t("common.ask.projectName"), "app");
 		}
-		
+
 		this.projectName = projectName;
 	}
 
 	protected async _askAppsList(text: string) {
-		let usrChoices = await checkbox(text, ["ExpressJS", "ReactJS"]);
+		let usrChoices = await checkbox(text, [
+			`${chalk.hex("#F18E16").bold("ExpressJS")}`,
+			`${chalk.hex("#24C2FD").bold("ReactJS")}`,
+		]);
 		this.options.appsList = usrChoices.map((value: string) => {
 			switch (value) {
-				case "ReactJS":
+				case `${chalk.hex("#24C2FD").bold("ReactJS")}`:
 					return "react";
 					break;
-				case "ExpressJS":
+				case `${chalk.hex("#F18E16").bold("ExpressJS")}`:
 					return "express";
 					break;
 			}
@@ -228,6 +289,7 @@ export default class ProjectGenerator extends BaseGenerator {
 		if (this.options.useYarn === undefined) {
 			try {
 				this.options.useYarn = await confirm(text, true);
+        this.packageManager = this.options.useYarn ? "yarn" : "npm";
 			} catch (err) {
 				console.log(err);
 			}
@@ -304,25 +366,18 @@ export default class ProjectGenerator extends BaseGenerator {
 				true
 			);
 			this.generators.push({ name: value, generator: expressGenerator });
-      
 		});
-    this.services.setServices(this._getServices())
+		this.services.setServices(this._getServices());
 	}
 
-	private _getServices() : Services {
-		return this.generators.reduce(
-			(
-				result: Services,
-				{ name, generator }
-			) => {
-				result[name] = {
-					appName: generator.options.appName,
-					port: generator.options.port,
-				};
-				return result;
-			},
-			{}
-		);
+	private _getServices(): Services {
+		return this.generators.reduce((result: Services, { name, generator }) => {
+			result[name] = {
+				appName: generator.options.appName,
+				port: generator.options.port,
+			};
+			return result;
+		}, {});
 	}
 
 	//File system helpers
@@ -333,5 +388,64 @@ export default class ProjectGenerator extends BaseGenerator {
 
 	private _checkIfNameValid(name: string) {
 		return testAppName(name);
+	}
+
+	//Logs helpers
+
+	protected _logCompose(arr: string[], spinner: { clear: () => void; text: string }) {
+		spinner.clear();
+
+		//Log dedicated container: <projetName>-<appName> | log...
+		if (arr.join("\n").includes("|")) {
+			//Adding some timestamp to the log
+			const date = new Date();
+			const dateFormat = `${date.toLocaleString()}`;
+
+			//Get name of container
+			const container = arr[0].split("|")[0];
+
+			//get arrays of logs
+			const lines = arr.map((el: string) => el.split("|")[1]);
+
+			//Get  generator from the appName
+			const service = this.generators.filter((el) => {
+				return container.includes(el.generator.options.appName);
+			})[0];
+
+			//Show the logs
+			header({
+				title: `${container.trim()}`,
+				tagLine: `[${dateFormat}]`,
+				description: lines,
+				version: "",
+				bgColor: service ? service.generator.options.color : this.color,
+				color: "#000000",
+				bold: true,
+				clear: false,
+			});
+
+			//Show stop command in the spinner
+			spinner.text = `${chalk.green("Waiting...")} 'CTRL + C' to ${chalk.red("stop!")}`;
+		} else {
+			//This is usually building phase
+
+			//will log each line and try to add colors
+			arr.forEach((line: string) => {
+				//Get the service if it can: # [<projetName>-<appName>-dev]
+				const generatorColor = this.generators.filter((el) => {
+					return line.includes(el.generator.options.appName);
+				});
+
+				//which color, service or default
+				const lineColor =
+					generatorColor.length && generatorColor.length >= 1
+						? generatorColor[0].generator.options.color
+						: "#ffffff";
+				log(
+					`${chalk.magenta.bold(`${this.appName}`)}: ${chalk.hex(lineColor).bold(line)}`
+				);
+				spinner.text = arr ? chalk.hex(lineColor).bold(arr[arr.length - 1]) : "...";
+			});
+		}
 	}
 }

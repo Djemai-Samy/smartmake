@@ -23,7 +23,11 @@
             "usingDocker": "Nous utilisons Docker dans le projet !",
             "notUsingDocker": "Nous n'utilisons pas Docker dans le projet !",
             "usingDockerCompose": "Nous utilisons Docker Compose dans le projet !",
-            "notUsingDockerCompose": "Nous n'utilisons pas Docker Compose dans le projet !"
+            "notUsingDockerCompose": "Nous n'utilisons pas Docker Compose dans le projet !",
+            "dependencies": {
+                "install": "Installation des dépendances...",
+                "installed": "Dépendances installés pour"
+            }
         },
         "error": {
             "nameInvalid": "Ce nom n'est pas correct ! (Le nom doit être en minuscules et ne doit contenir que des caractères alphanumériques, des underscores et des tirets. Il doit commencer par une lettre et ne peut pas se terminer par un tiret ou un underscore.)",
@@ -37,12 +41,23 @@
             }
         }
     },
+    "compose": {
+        "commands": {
+            "dev": "Build les Images et deploit le Stack en mode developpement avec Live Reload.",
+            "up": "Build les Images et deploit le Stack en mode production."
+        }
+    },
     "express": {
         "ask": {
             "appName": "Quel est le nom de l'application ExpressJS ?",
             "port": "Quel port voulez vous utiliser pour votre application ExpressJS?"
         },
         "info": {},
+        "commands": {
+            "dev": "Lancer le seveur en mode developpement avec Live Reload.",
+            "build": "Build l'application.",
+            "start": "Lancer the server en mode pruduction."
+        },
         "server": {},
         "readme": {
             "runServer": "Lancer le serveur"
@@ -52,6 +67,15 @@
         "ask": {
             "appName": "Quel est le nom de votre application ReactJS?",
             "port": "Quel port voulez vous utiliser pour votre application ReactJS?"
+        },
+        "info": {},
+        "commands": {
+            "dev": " Deploit l'application en mode developpement avec Live Reload.",
+            "build": "Build l'application (Modification dans webpack.config.js)."
+        },
+        "server": {},
+        "readme": {
+            "runServer": "Run the server"
         }
     }
 }

@@ -8,52 +8,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-/**
- * smart-maker
- * A flexible app boilerplate generator
- *
- * @author Djemai Samy <djemai-samy>
- */
-import path from "path";
-import yeoman from "yeoman-environment";
-import { fileURLToPath } from "url";
-import init from "./utils/init.js";
 import cli from "./utils/cli.js";
-import { ChildProcessTracker } from "./utils/childs_processes.js";
+import { runCreate } from "./commands/create/index.js";
 const input = cli.input;
 const flags = cli.flags;
 const { clear, debug } = flags;
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    init({});
-    const tracker = ChildProcessTracker.getInstance();
-    process.on("SIGINT", (a) => {
-        tracker.killAllChilds(0);
-    });
     input.includes(`help`) && cli.showHelp(0);
-    //  log(flags);
-    const options = {
-        lang: flags.language,
-        useTypescript: flags.useTypescript,
-        useJavascript: flags.useJavascript,
-        useYarn: flags.useYarn,
-        useNpm: flags.useNpm,
-        install: flags.install,
-        noInstall: flags.noInstall,
-        useDocker: flags.docker,
-        noDocker: flags.noDocker,
-    };
-    const generatorOptions = {
-        useTypescript: undefined,
-        useYarn: undefined,
-        install: undefined,
-        useDocker: undefined,
-    };
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.resolve(path.dirname(__filename), `generators`, "apps");
-    var env = yeoman.createEnv();
-    env.register(__dirname, `project`);
-    env.run([`project`], {
-        skipInstall: true,
-        flags,
-    });
+    yield runCreate();
+    // const options: Options = {
+    // 	lang: flags.language,
+    // 	useTypescript: flags.useTypescript,
+    // 	useJavascript: flags.useJavascript,
+    // 	useYarn: flags.useYarn,
+    // 	useNpm: flags.useNpm,
+    // 	install: flags.install,
+    // 	noInstall: flags.noInstall,
+    // 	useDocker: flags.docker,
+    // 	noDocker: flags.noDocker,
+    // } as Options;
+    // const generatorOptions: GeneratorOptions = {
+    // 	useTypescript: undefined,
+    // 	useYarn: undefined,
+    // 	install: undefined,
+    // 	useDocker: undefined,
+    // };
+    // const __filename = fileURLToPath(import.meta.url);
+    // const __dirname = path.resolve(path.dirname(__filename), `generators`,"apps");
+    // var env = yeoman.createEnv();
+    // env.register(__dirname, `project`);
+    // env.run([`project`], {
+    // 	skipInstall: true,
+    // 	flags,
+    // });
 }))();

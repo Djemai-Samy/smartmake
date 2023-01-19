@@ -40,10 +40,10 @@ export default class extends BaseGenerator {
 		//Ask to enter the projetName
 		await this._askAppName();
 
-    await this._askPort();
+		await this._askPort();
 
-    //Update the singleton that tracks services
-    this._updateServices();
+		//Update the singleton that tracks services
+		this._updateServices();
 
 		//Get the options
 		const chosenOptions = await this._askOptions();
@@ -85,25 +85,30 @@ export default class extends BaseGenerator {
 		if (!this.options.install) {
 			return;
 		}
-		const spinner = ora("Installing dependecies");
+    const text = await lang.getInstance(this.options.lang);
+		const spinner = ora(text.t('common.info.dependecies.install'));
 		spinner.start();
 		await new Promise<void>((resolve, reject) => {
 			this._spawnCommandApp(
 				`${this.packageManager} install`,
 				{
 					stdout: (arr) => {
-						spinner.text = arr.join("\n");
+						spinner.text = `${chalk.hex(this.color).bold(this.appName)}: ${arr.join("\n")}`;
 					},
 					stderr: (arr) => {
-						spinner.text = arr.join("\n");
+						spinner.text = `${chalk.hex(this.color).bold(this.appName)}: ${arr.join("\n")}`;
 					},
 					exit: (code, arr) => {
-						spinner.text = arr.join("\n");
+						spinner.text = `${chalk.hex(this.color).bold(this.appName)}: ${arr.join("\n")}`;
 					},
 					close: (code, arr) => {
+            log(chalk.hex(this.color).bold(`${text.t('common.info.dependencies.installed')}: ${this.appName}`))
+            spinner.text = `${this.appName}: ${arr.join("\n")}`;
 						resolve();
 					},
-					error: (err) => {},
+					error: (err) => {
+            log(`Error for ${this.appName}: ${err}`)
+          },
 				},
 				false
 			);
@@ -111,95 +116,9 @@ export default class extends BaseGenerator {
 
 		spinner.stop();
 		const useTypescript = this.options.useTypescript;
-		info("We are almost there! Here's a list of usefull comands:");
-		header({
-			title: `Localhost`,
-			tagLine: `Simple Development Environment`,
-			description: [
-				`${
-					useTypescript
-						? chalk.green(` ${this.packageManager} run watch `) +
-						  ": Build or re-build a dist folder the app."
-						: ""
-				}`,
-				`${chalk.green(
-					` ${this.packageManager} run dev`
-				)} : Deploy in Dev Mode with Hot Reload.`,
-				`${
-					useTypescript
-						? chalk.magenta(` ${this.packageManager} run build `) +
-						  " : Build or re-build a dist folder the app."
-						: ""
-				}`,
-				`${
-					chalk.magenta(` ${this.packageManager} run start `) +
-					`${
-						useTypescript ? "'Build a dist folder and deploy the app." : "Deploy the app."
-					}`
-				}`,
-			],
-			version: "",
-			bgColor: "#36BB09",
-			color: "#000000",
-			bold: true,
-			clear: false,
-		});
 
-		if (this.options.useDocker) {
-			// log(`${chalk.blue.bold("-----------------------------------")}`);
-			// header({
-			// 	title: `Docker cotainer`,
-			// 	tagLine: `Simple Development Environment`,
-			// 	description: [
-			// 		`${
-			// 			chalk.green(` ${this.packageManager} run docker:build:dev `) +
-			// 			": Remove old Dev Mode image and build new Dev Mode image."
-			// 		}`,
-			// 		`${chalk.green(
-			// 			` ${this.packageManager} run docker:dev`
-			// 		)} : Build the Dev Mode image and run a container with Hot Reload (Removed when exit).`,
-			// 		`${
-			// 			chalk.magenta(` ${this.packageManager}  docker:build `) +
-			// 			` : 'Build the Prod Image.`
-			// 		}`,
-			// 		`${
-			// 			chalk.magenta(` ${this.packageManager}  docker:run `) +
-			// 			` : 'Build the Prod Image and deploy the Prod Container.`
-			// 		}`,
-			// 		`${
-			// 			chalk.red(` ${this.packageManager} docker:remove `) +
-			// 			" : Remove the Prod Container."
-			// 		}`,
-			// 	],
-			// 	version: "",
-			// 	bgColor: "#36BB09",
-			// 	color: "#000000",
-			// 	bold: true,
-			// 	clear: false,
-			// });
-			log(`${chalk.blue.bold("-----------------------------------")}`);
-			if (this.options.useDocker) {
-				header({
-					title: `Docker Compose`,
-					tagLine: `Simple Development Environment`,
-					description: [
-						`${
-							chalk.green(` ${this.packageManager} run compose:dev `) +
-							": Build the Dev Image and deploy the Dev Stack with Hot Reload."
-						}`,
-						`${chalk.magenta(
-							` ${this.packageManager} run compose:up`
-						)} : Build the Prod Image and deploy the Prod Stack.`,
-					],
-					version: "",
-					bgColor: "#36BB09",
-					color: "#000000",
-					bold: true,
-					clear: false,
-				});
-				log(`${chalk.blue.bold("-----------------------------------")}`);
-			}
-		}
+    this._showStartDoc(text);
+
 	}
 	async end() {
 		const text = await lang.getInstance(this.options.lang);
@@ -222,23 +141,52 @@ export default class extends BaseGenerator {
 			if (!this.options.useDocker) {
 				this._spawnCommandApp(`${this.packageManager} run dev`, {
 					stdout: (arr) => {
-						this._logLines(arr, (line) => {
-							magic(`[${this.appName.toUpperCase()}]`, line);
-						});
+						this._logLines(`${this.packageManager} run dev`, arr);
+						// header({
+						//   title: `${this.appName}`,
+						//   tagLine: `yarn run dev`,
+						//   description: arr,
+						//   version: "",
+						//   bgColor: this.color,
+						//   color: "#000000",
+						//   bold: true,
+						//   clear: false,
+						// });
 					},
 					stderr: (arr) => {
-						this._logLines(arr, (line) => {
-							magic(`[${this.appName.toUpperCase()}]`, line);
-						});
-					},
-					close: (code, arr) => {
-						this._logLines(arr, (line) => {
-							magic(`[${this.appName.toUpperCase()}]`, "Closed! See you later!");
+						header({
+							title: `${this.appName}`,
+							tagLine: `[INFO]`,
+							description: arr,
+							version: "",
+							bgColor: this.color,
+							color: "#000000",
+							bold: true,
+							clear: false,
 						});
 					},
 					exit: (code, arr) => {
-						this._logLines(arr, (line) => {
-							magic(`[${this.appName.toUpperCase()}]`, "Stopping! Hang on a minute...");
+						header({
+							title: `${this.appName}`,
+							tagLine: `Stopping...`,
+							description: "",
+							version: "",
+							bgColor: this.color,
+							color: "#000000",
+							bold: true,
+							clear: false,
+						});
+					},
+					close: (code, arr) => {
+						header({
+							title: `${this.appName}`,
+							tagLine: `Closed!`,
+							description: "",
+							version: "",
+							bgColor: this.color,
+							color: "#000000",
+							bold: true,
+							clear: false,
 						});
 					},
 					error: (err) => {},
@@ -251,15 +199,15 @@ export default class extends BaseGenerator {
 	//Prompt helpers
 	protected async _askAppName() {}
 
-	protected async _askPort() {
-  }
-  protected async _updateServices() {
-    
-    this.services.addServices(this.template.split('/')[0], {appName: this.appName, port: this.port})
-  }
+	protected async _askPort() {}
+	protected async _updateServices() {
+		this.services.addServices(this.template.split("/")[0], {
+			appName: this.appName,
+			port: this.port,
+		});
+	}
 
 	protected _getTemplateData() {
-
 		return {
 			projectName: this.options.projectName,
 			appName: this.options.appName,
@@ -273,9 +221,11 @@ export default class extends BaseGenerator {
 			useDocker: this.options.useDocker,
 			useDockerCompose: this.options.useDockerCompose ? true : false,
 			port: this.options.port,
-      services: this.services.getServices()
+			services: this.services.getServices(),
 		};
 	}
+
+  protected _showStartDoc(text: typeof import("i18next")){}
 
 	//Generator Loaders
 	private _loadTypescript() {

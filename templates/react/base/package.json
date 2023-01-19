@@ -25,6 +25,7 @@
     <%_if(useTypescript){_%>
     "typescript": "*",
     "tsc": "*",
+    "@types/node":"*",
     "@types/react": "*",
     "@types/react-dom": "*",
     "@babel/preset-typescript": "*",
