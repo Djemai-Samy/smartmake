@@ -1,7 +1,7 @@
 {
 	"name": "smartmake",
 	"description": "A flexible app boilerplate generator.",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"license": "MIT",
 	"main": "./bin/index.js",
 	"types": "./bin/index.d.ts",
