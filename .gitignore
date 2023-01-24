@@ -9,8 +9,10 @@ node_modules/**/*
 # Build #
 ##########
 /bin
-bin
+/bin/
+bin/
 bin/**/*
+/bin/**/*
 
 # Packages #
 ############
