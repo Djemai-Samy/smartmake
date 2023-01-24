@@ -5,6 +5,15 @@
 # Ignore all directories called node_modules in current folder and any subfolders.
 node_modules/
 /node_modules/
+node_modules/**/*
+/node_modules/**/*
+
+# Source filess #
+##########
+src/
+/src/
+src/**/*
+/src/**/*
 
 # Packages #
 ############

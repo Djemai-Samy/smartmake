@@ -24,8 +24,9 @@ const App = () => {
       <%_if(services.express){_%>
       <h1>{message}</h1>
       <%_}else{_%>
-      <h1>Simple React App</h1>
+      <h1>Simple React App made with Smartmake!</h1>
       <%_}_%>
+      <img src={logo} alt="Smartmake Logo" id="logo"/>
     </div>
   );
 };

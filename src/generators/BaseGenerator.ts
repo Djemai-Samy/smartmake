@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import Generator from "yeoman-generator";
 import { ChildProcessTracker } from "../utils/childs_processes.js";
-import { log } from "../utils/log.js";
 import { ServicesTracker } from "./apps/ServicesTracker.js";
 import header from "../utils/init.js";
 import { ProcessCallbacks } from "../utils/commands.js";

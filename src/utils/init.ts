@@ -13,8 +13,8 @@ export default (options: any) => {
   const defaultOptions = {
     title: `smartmake🔥`,
     tagLine: `by Djemai Samy`,
-    description: ["A flexible app generator"],
-    version: "0.0.1",
+    description: ["A flexible app generator and manager!"],
+    version: "1.0.0",
     bgColor: '#36BB09',
     color: '#000000',
     bold: true,

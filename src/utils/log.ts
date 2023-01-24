@@ -1,5 +1,4 @@
 import chalk from "chalk";
-import alert from "cli-alerts"
 const dim = chalk.dim;
 export const log =  (info: any) => {
 	console.log(info);
@@ -54,6 +53,4 @@ export const logService = (options: any) => {
   console.log(`${chalk.bgBlack.hex(bgColor).underline('                                    ')}`)
   console.log();
 };
-
-//
 

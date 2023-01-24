@@ -38,7 +38,9 @@
 
 		/* Completeness */
 		/* Skip type checking all .d.ts files. */
-		"skipLibCheck": true 
+		"skipLibCheck": true,
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
 	},
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
 }

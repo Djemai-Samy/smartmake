@@ -4,11 +4,6 @@ import chalk from "chalk";
 
 
 const flags = {
-	version: {
-		type: `boolean`,
-		alias: `v`,
-		desc: `Print CLI version`,
-	},
 	language: {
 		type: `string`,
 		alias: `l`,
@@ -17,22 +12,20 @@ const flags = {
 	yes: {
 		type: `boolean`,
 		alias: `y`,
-		desc: `Apply -> ${chalk.green(
-			"--language en --useTypescript --useYarn --install --docker"
-		)}.`,
+		desc: `Apply default values.`,
 	},
   docker: {
 		type: `boolean`,
 		alias: `d`,
-		desc: `Use docker for the project -> ${chalk.green('default with --yes')}`,
+		desc: `Launch apps in docker -> ${chalk.green('default with --yes')}`,
 	},
 	noDocker: {
 		type: `boolean`,
-		desc: `Don't use docker for the project`,
+		desc: `Don't launch apps in docker.`,
 	},
   all: {
 		type: `boolean`,
-		desc: `All services`,
+		desc: `Launch all services.`,
 	},
 } as AnyFlags;
 

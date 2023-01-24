@@ -2,7 +2,6 @@ import ora from "ora";
 import { spawnCommand } from "../../../../utils/commands.js";
 import { Service, Settings } from "../ProjectManage.js";
 import BaseManager from "./BaseManager.js";
-import header from "../../../../utils/init.js";
 import { log, logService } from "../../../../utils/log.js";
 import chalk from "chalk";
 

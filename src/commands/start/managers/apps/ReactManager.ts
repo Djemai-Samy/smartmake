@@ -3,7 +3,7 @@ import ora from "ora";
 import { lang } from "../../../../translate.js";
 import { proceed } from "../../../../utils/ask.js";
 import { spawnCommand } from "../../../../utils/commands.js";
-import { error, info, log, logService, warning } from "../../../../utils/log.js";
+import { error, log, logService } from "../../../../utils/log.js";
 import { Service, Settings } from "../ProjectManage.js";
 import BaseManager from "./BaseManager.js";
 

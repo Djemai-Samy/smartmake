@@ -1,10 +1,7 @@
 import Generator from "yeoman-generator";
-
 import path from "path";
 import BaseGenerator from "./BaseGenerator.js";
-import chalk from "chalk";
 import { lang } from "../translate.js";
-import { log, magic } from "../utils/log.js";
 export default class extends BaseGenerator {
 	// The name `constructor` is important here
 	constructor(args: string | string[], opts: Generator.GeneratorOptions) {

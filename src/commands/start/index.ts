@@ -6,17 +6,12 @@
  *
  * @author Djemai Samy <djemai-samy>
  */
-import path from "path";
 import fs from "fs";
-import { fileURLToPath } from "url";
-import init from "../../utils/init.js";
 import cli, { ManagerFlags } from "./cli.js";
-import { error, log } from "../../utils/log.js";
+import { error } from "../../utils/log.js";
 import { ChildProcessTracker } from "../../utils/childs_processes.js";
 import ProjectManager from "./managers/ProjectManage.js";
-import { AnyFlags } from "meow";
 import { smartmakeSettingsExist } from "../../utils/filesystem.js";
-import { lang } from "../../translate.js";
 
 const inputs = cli.input.slice(1);
 const flags = cli.flags as ManagerFlags;

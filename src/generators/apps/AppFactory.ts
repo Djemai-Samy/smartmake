@@ -1,4 +1,3 @@
-import AppGenerator from "../AppGenerator.js";
 import ExpressGenerator from "./express/index.js";
 import ReactGenerator from "./react/index.js";
 

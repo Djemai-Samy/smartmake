@@ -2,18 +2,13 @@ import Generator from "yeoman-generator";
 import fse from "fs-extra";
 import { lang } from "../translate.js";
 import path from "path";
-import { fileURLToPath } from "url";
 import BaseGenerator from "./BaseGenerator.js";
-import { error, info, log, magic, success, sep } from "../utils/log.js";
-import { ask } from "../utils/ask.js";
-import fs from "fs";
+import { log, } from "../utils/log.js";
 import chalk from "chalk";
 import ora from "ora";
 import header from "../utils/init.js";
 import TypescriptGenerator from "./TypescriptGenerator.js";
 import DockerGenerator from "./DockerGenerator.js";
-import { spawn } from "child_process";
-import { ServicesTracker } from "./apps/ServicesTracker.js";
 export default class extends BaseGenerator {
 	//Filename Helper
 	port: any;
@@ -212,6 +207,7 @@ export default class extends BaseGenerator {
 	protected async _askAppName() {}
 
 	protected async _askPort() {}
+  
 	protected async _updateServices() {
 		this.services.addServices(this.template.split("/")[0], {
 			appName: this.appName,

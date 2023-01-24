@@ -1,12 +1,10 @@
 import chalk from "chalk";
-import { AnyFlags } from "meow";
 import { isValidLanguage, lang } from "../../../translate.js";
 import { askApps, askDocker, askLanguage, askTask, list } from "../../../utils/ask.js";
 import { checkCommand, spawnCommand } from "../../../utils/commands.js";
 import {
 	dockerComposeDevFileExist,
 	dockerComposeFileExist,
-	fileExist,
 	packageFileExist,
 } from "../../../utils/filesystem.js";
 import { error, log } from "../../../utils/log.js";

@@ -4,17 +4,6 @@ import meowHelp from "cli-meow-help";
 type AnyFlags = Record<string, any>;
 
 const flags = {
-	// clear: {
-	// 	type: `boolean`,
-	// 	default: true,
-	// 	alias: `c`,
-	// 	desc: `Clear the console`,
-	// },
-	// noClear: {
-	// 	type: `boolean`,
-	// 	default: false,
-	// 	desc: `Don't clear the console`,
-	// },
 	debug: {
 		type: `boolean`,
 		default: false,
@@ -30,9 +19,8 @@ const flags = {
 
 const commands = {
 	help: { desc: `Print help info` },
-	create: { desc: `Create apps` },
-	// express: { desc: "Creating an ExpressJS project" },
-	// react: { desc: "Creating a ReactJS project" },
+	create: { desc: `Create apps.` },
+	start: { desc: `Start your apps.` },
 };
 
 const helpText = meowHelp({
