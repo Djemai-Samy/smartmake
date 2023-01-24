@@ -1,6 +1,13 @@
 import express from 'express';
 import home from './routes/home.route<%=!useTypescript ? ".js" : "" %>';
 import path from 'path';
+
+<%_if(!useTypescript){_%>
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+<%_}_%>
+
 //Server initialization
 const server = express();
 

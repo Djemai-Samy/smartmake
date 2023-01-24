@@ -8,37 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import init from "./utils/init.js";
 import cli from "./utils/cli.js";
 import { runCreate } from "./commands/create/index.js";
+import { runStart } from "./commands/start/index.js";
 const input = cli.input;
 const flags = cli.flags;
 const { clear, debug } = flags;
 (() => __awaiter(void 0, void 0, void 0, function* () {
+    init({});
+    input.includes("create") && (yield runCreate());
+    input.includes("start") && (yield runStart());
     input.includes(`help`) && cli.showHelp(0);
-    yield runCreate();
-    // const options: Options = {
-    // 	lang: flags.language,
-    // 	useTypescript: flags.useTypescript,
-    // 	useJavascript: flags.useJavascript,
-    // 	useYarn: flags.useYarn,
-    // 	useNpm: flags.useNpm,
-    // 	install: flags.install,
-    // 	noInstall: flags.noInstall,
-    // 	useDocker: flags.docker,
-    // 	noDocker: flags.noDocker,
-    // } as Options;
-    // const generatorOptions: GeneratorOptions = {
-    // 	useTypescript: undefined,
-    // 	useYarn: undefined,
-    // 	install: undefined,
-    // 	useDocker: undefined,
-    // };
-    // const __filename = fileURLToPath(import.meta.url);
-    // const __dirname = path.resolve(path.dirname(__filename), `generators`,"apps");
-    // var env = yeoman.createEnv();
-    // env.register(__dirname, `project`);
-    // env.run([`project`], {
-    // 	skipInstall: true,
-    // 	flags,
-    // });
 }))();

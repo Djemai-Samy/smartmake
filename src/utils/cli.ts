@@ -26,51 +26,11 @@ const flags = {
 		alias: `v`,
 		desc: `Print CLI version`,
 	},
-	language: {
-		type: `string`,
-		alias: `l`,
-		desc: `Choose your language: [fr, en]`,
-	},
-	useTypescript: {
-		type: "boolean",
-		alias: "t",
-		desc: "Use typescript",
-	},
-	useJavascript: {
-		type: "boolean",
-		alias: "j",
-		desc: "Use javascript",
-	},
-	useYarn: {
-		type: `boolean`,
-		desc: `Use Yarn`,
-	},
-	useNpm: {
-		type: `boolean`,
-		desc: `Use npm`,
-	},
-	install: {
-		type: `boolean`,
-		alias: `i`,
-		desc: `Install dependencies`,
-	},
-	noInstall: {
-		type: `boolean`,
-		desc: `Don't install dependencies`,
-	},
-	docker: {
-		type: `boolean`,
-		alias: `d`,
-		desc: `Use docker for the project`,
-	},
-	noDocker: {
-		type: `boolean`,
-		desc: `Don't use docker for the project`,
-	},
 } as AnyFlags;
 
 const commands = {
 	help: { desc: `Print help info` },
+	create: { desc: `Create apps` },
 	// express: { desc: "Creating an ExpressJS project" },
 	// react: { desc: "Creating a ReactJS project" },
 };
@@ -92,7 +52,7 @@ const options = {
 export default meow(helpText, {
 	inferType: true,
 	importMeta: import.meta,
-	description: "true",
+	description: "You can create apps and choose your options",
 	hardRejection: false,
 	flags: flags,
 });

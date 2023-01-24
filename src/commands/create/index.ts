@@ -13,12 +13,12 @@ import init from "../../utils/init.js";
 import cli, { Options, GeneratorOptions } from "./cli.js";
 import { log } from "../../utils/log.js";
 import { ChildProcessTracker } from "../../utils/childs_processes.js";
-const input = cli.input;
+const input = cli.input.slice(1);
 const flags = cli.flags;
 const { clear, debug } = flags;
 
 export const runCreate = async () => {
-	init({});
+
 	const tracker = ChildProcessTracker.getInstance();
 	process.on("SIGINT", (a) => {
 		tracker.killAllChilds(0);
@@ -55,5 +55,6 @@ export const runCreate = async () => {
 	env.run([`project`], {
 		skipInstall: true,
 		flags,
+    input
 	});
 };

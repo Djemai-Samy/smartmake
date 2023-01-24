@@ -1,13 +1,9 @@
 import chalk from "chalk";
 import alert from "cli-alerts"
+const dim = chalk.dim;
 export const log =  (info: any) => {
-	// alert({
-	// 	type: `warning`,
-	// 	name: `DEBUG LOG`,
-	// 	msg: ``
-	// });
-  console.log();
 	console.log(info);
+  console.log();
 };
 
 export const info = (info: string) => {
@@ -17,6 +13,10 @@ export const info = (info: string) => {
 
 export const error = (error: string) => {
   log(`${chalk.red.bold.underline("error")}: ${error}`)
+}
+
+export const warning = (warning: string) => {
+  log(`${chalk.hex('#F18E16').bold.underline("warning")}: ${warning}`)
 }
 
 export const magic = (type: string, message: string) => {
@@ -30,4 +30,30 @@ export const success = ( message: string) => {
 export const sep = () =>{
   log(`${chalk.bgBlack.underline('                                   ')}`)
 }
+
+
+export const logService = (options: any) => {
+
+  //Adding some timestamp to the log
+  const date = new Date();
+  const dateFormat = `${date.toLocaleString()}`;
+
+  const {
+    title,
+    description,
+    bgColor,
+  } = options;
+
+  console.log(
+    `${`${chalk.bgHex(bgColor).hex("#00000").bold(` ${title} `)}`} ${dim(dateFormat)}\n\n${
+      
+          description.length ? description?.join('\n\n'): description
+    
+    }`
+  );
+  console.log(`${chalk.bgBlack.hex(bgColor).underline('                                    ')}`)
+  console.log();
+};
+
+//
 

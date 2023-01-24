@@ -7,20 +7,33 @@ import { ChildProcessTracker } from "../utils/childs_processes.js";
 import { log } from "../utils/log.js";
 import { ServicesTracker } from "./apps/ServicesTracker.js";
 import header from "../utils/init.js";
+import { ProcessCallbacks } from "../utils/commands.js";
 
 export default class BaseGenerator extends Generator {
+	// For translations
 	text: typeof import("i18next") | undefined;
+
+	// Paths helpers
 	__filename = fileURLToPath(import.meta.url);
 	templateFolderPath: string;
 	destinationFolderPath: string;
+
+	//Generator settings
+  
 	projectName: string;
 	appName: string = "app";
+	inputs: Array<string>;
 	packageManager: string;
+  language: string = "en";
+  
+	//Tracking apps
 	tracker = ChildProcessTracker.getInstance();
 	services = ServicesTracker.getInstance();
-	//Loading helper
+
+	//Spnner for loading
 	spinner = ora("");
 	color: string = "#36F139";
+
 	constructor(
 		args: string | string[],
 		opts: Generator.GeneratorOptions,
@@ -41,12 +54,12 @@ export default class BaseGenerator extends Generator {
 		this.destinationFolderPath = path.normalize(this.destinationPath());
 		this.projectName = opts.projectName;
 		this.packageManager = this.options.useYarn ? "yarn" : "npm";
+		this.inputs = opts.input;
 	}
 
 	async initializing() {}
 
 	//Comands Helpers
-
 	// Get a process and assign eventListeners (stdout, sterr, error, exit, close)
 	private _handleChildEvent = (
 		ls: ChildProcessWithoutNullStreams,
@@ -132,8 +145,6 @@ export default class BaseGenerator extends Generator {
 
 	//Log bunch of line one by one using a callback
 	protected _logLines(tagline: string, arr: string[]) {
-		this.spinner.stop();
-		this.spinner.text = arr[arr.length - 1];
 		header({
 			title: `${this.appName}`,
 			tagLine: tagline,
@@ -144,12 +155,6 @@ export default class BaseGenerator extends Generator {
 			bold: true,
 			clear: false,
 		});
-		this.spinner.start();
-		// arr.forEach((el) => {
-		// 	this.spinner.stop();
-		// 	this.spinner.text = el;
-		// 	this.spinner.start();
-		// });
 	}
 	protected _getProjectPath() {
 		return path.join(this.destinationFolderPath, this.projectName);
@@ -160,10 +165,4 @@ export default class BaseGenerator extends Generator {
 	}
 }
 
-export type ProcessCallbacks = {
-	stdout: (data: string[]) => void;
-	stderr: (data: string[]) => void;
-	close: (code: number, data: string[]) => void;
-	exit: (code: number, data: string[]) => void;
-	error: (data: { name: string; message: string; stack?: string | undefined }) => void;
-};
+

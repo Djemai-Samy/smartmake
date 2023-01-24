@@ -1,6 +1,6 @@
 import Generator from "yeoman-generator";
-import { lang } from "../../translate.js";
-import { ask, list, confirm, checkbox } from "../../utils/ask.js";
+import { isValidLanguage, lang, languages } from "../../translate.js";
+import { ask, list, confirm, checkbox, askLanguage } from "../../utils/ask.js";
 import { checkCommand } from "../../utils/commands.js";
 import { error, log, magic } from "../../utils/log.js";
 import BaseGenerator from "../BaseGenerator.js";
@@ -21,7 +21,7 @@ export default class ProjectGenerator extends BaseGenerator {
 	// The name `constructor` is important here
 	constructor(args: string | string[], opts: Generator.GeneratorOptions) {
 		// Calling the super constructor is important so our generator is correctly set up
-    
+
 		super(args, opts, "base");
 		this.color = "#4AABEE";
 	}
@@ -29,13 +29,13 @@ export default class ProjectGenerator extends BaseGenerator {
 	async prompting() {
 		await this._parseOptions();
 
-		await this._askLanguage();
+		this.language= await this._askLanguage();
 
-		const text = await lang.getInstance(this.options.lang);
+		const text = await lang.getInstance(this.language);
 
 		await this._askProjetName(text);
 
-		await this._askAppsList(text.t("common.ask.templateName"));
+		await this._askAppsList(text);
 
 		await this._askOptions(text);
 
@@ -45,15 +45,7 @@ export default class ProjectGenerator extends BaseGenerator {
 	}
 	async writing() {
 		fse.mkdir(`${this.projectName}`);
-		const text = await lang.getInstance(this.options.lang);
-
-		// this.fs.copyTpl(`${this.templateFolderPath}/package.json`, this._getProjectPath(), {
-		//   projectName: this.projectName,
-		//   text: text,
-		//   packageManager: this.options.useYarn ? "yarn" : "npm",
-		//   useTypescript: this.options.useTypescript,
-		//   services: this.services,
-		// });
+		const text = await lang.getInstance(this.language);
 
 		if (this.options.useDocker) {
 			this.fs.copyTpl(`${this.templateFolderPath}/**/*`, this._getProjectPath(), {
@@ -80,9 +72,12 @@ export default class ProjectGenerator extends BaseGenerator {
 			{}
 		);
 	}
+
 	async install() {}
+
 	async end() {
-		const text = await lang.getInstance(this.options.lang);
+		const text = await lang.getInstance(this.language);
+
 		if (this.options.useDocker) {
 			header({
 				title: `Docker Compose`,
@@ -103,11 +98,30 @@ export default class ProjectGenerator extends BaseGenerator {
 			});
 		}
 
+		//Creating a json file with the services, names...
+		//This is for starting the services with the cli
+
+		const jsonSettings = JSON.stringify(
+			{
+				name: this.projectName,
+				language: this.language,
+				useTypescript: this.options.useTypescript,
+				useDocker: this.options.useDocker,
+				useYarn: this.options.useYarn,
+				services: this.services.getServices(),
+			},
+			null,
+			2
+		);
+		// Write JSON string to a file
+		fs.writeFileSync(`${this._getProjectPath()}/smartmake.json`, jsonSettings);
+
 		if (!this.options.install) {
 			return;
 		}
 
 		const start = await confirm(text.t("common.ask.startServer"), true);
+
 		if (start) {
 			this.generators.forEach((gen) => (gen.generator.options.start = true));
 
@@ -128,7 +142,7 @@ export default class ProjectGenerator extends BaseGenerator {
 						exit: (code, arr) => {
 							spinner.clear();
 							header({
-								title: `[DOCKER COMPOSE] ${this.appName}`,
+								title: `[${this.appName}]:`,
 								tagLine: `Stopping...`,
 								description: "",
 								version: "",
@@ -141,7 +155,7 @@ export default class ProjectGenerator extends BaseGenerator {
 						close: (code, arr) => {
 							spinner.clear();
 							header({
-								title: `[DOCKER COMPOSE] ${this.appName}`,
+								title: `[${this.appName}]:`,
 								tagLine: `Closed!`,
 								description: "",
 								version: "",
@@ -209,23 +223,14 @@ export default class ProjectGenerator extends BaseGenerator {
 
 	//Questions
 	private async _askLanguage() {
-		//language
-		if (
-			!this.options.flags.language ||
-			(this.options.flags.language !== "en" && this.options.flags.language !== "fr")
-		) {
-			const language = await list("Choose your language...", ["Français", "English"]);
-			switch (language) {
-				case "Français":
-					this.options.lang = "fr";
-					break;
-				default:
-					this.options.lang = "en";
-					break;
-			}
-		} else {
-			this.options.lang = this.options.flags.language;
+		if (this.options.flags.language && isValidLanguage(this.options.flags.language)) {
+			return this.options.flags.language;
 		}
+
+		if (this.options.flags.yes) {
+			return 'en';
+		}
+		return  await askLanguage();
 	}
 
 	private async _askProjetName(text: typeof import("i18next")) {
@@ -249,21 +254,35 @@ export default class ProjectGenerator extends BaseGenerator {
 		this.projectName = projectName;
 	}
 
-	protected async _askAppsList(text: string) {
-		let usrChoices = await checkbox(text, [
-			`${chalk.hex("#F18E16").bold("ExpressJS")}`,
-			`${chalk.hex("#24C2FD").bold("ReactJS")}`,
-		]);
-		this.options.appsList = usrChoices.map((value: string) => {
-			switch (value) {
-				case `${chalk.hex("#24C2FD").bold("ReactJS")}`:
-					return "react";
-					break;
-				case `${chalk.hex("#F18E16").bold("ExpressJS")}`:
-					return "express";
-					break;
-			}
-		});
+	protected async _askAppsList(text: typeof import("i18next")) {
+		if (this.options.flags.yes && this.inputs.length > 0) {
+			this.options.appsList = this.inputs;
+			console.log(this.options.appsList);
+			return;
+		}
+
+		let usrChoices = [];
+		while (usrChoices.length == 0) {
+			usrChoices = await checkbox(
+				text.t("common.ask.templateName"),
+				[
+					{
+						name: `${chalk.hex("#F18E16").bold("ExpressJS")}`,
+						value: "express",
+						checked: this.inputs.includes("express"),
+					},
+					{
+						name: `${chalk.hex("#24C2FD").bold("ReactJS")}`,
+						value: "react",
+						checked: this.inputs.includes("react"),
+					},
+				],
+				[]
+			);
+			usrChoices.length == 0 ? error(text.t("common.error.noApp")) : null;
+		}
+
+		this.options.appsList = usrChoices;
 	}
 
 	protected async _askOptions(text: typeof import("i18next")) {
@@ -276,6 +295,10 @@ export default class ProjectGenerator extends BaseGenerator {
 	private async _askTypescript(text: string) {
 		//ask for typescript if not specified
 		if (this.options.useTypescript === undefined) {
+			if (this.options.flags.yes) {
+				this.options.useTypescript = true;
+				return;
+			}
 			try {
 				this.options.useTypescript = await confirm(text, true);
 			} catch (err) {
@@ -287,9 +310,14 @@ export default class ProjectGenerator extends BaseGenerator {
 	private async _askPackageManager(text: string) {
 		//package manager
 		if (this.options.useYarn === undefined) {
+			if (this.options.flags.yes) {
+				this.options.useYarn = true;
+				this.packageManager = "yarn";
+				return;
+			}
 			try {
 				this.options.useYarn = await confirm(text, true);
-        this.packageManager = this.options.useYarn ? "yarn" : "npm";
+				this.packageManager = this.options.useYarn ? "yarn" : "npm";
 			} catch (err) {
 				console.log(err);
 			}
@@ -298,6 +326,10 @@ export default class ProjectGenerator extends BaseGenerator {
 
 	private async _askInstallDeps(text: string) {
 		if (this.options.install === undefined) {
+			if (this.options.flags.yes) {
+				this.options.install = true;
+				return;
+			}
 			try {
 				this.options.install = await confirm(text, true);
 			} catch (err) {
@@ -308,6 +340,10 @@ export default class ProjectGenerator extends BaseGenerator {
 
 	private async _askDocker(text: string) {
 		if (this.options.useDocker === undefined) {
+			if (this.options.flags.yes) {
+				this.options.useDocker = true;
+				return;
+			}
 			try {
 				this.options.useDocker = await confirm(text, true);
 			} catch (err) {
@@ -346,11 +382,11 @@ export default class ProjectGenerator extends BaseGenerator {
 
 	private _loadAppGenerators() {
 		this.options.appsList.forEach((value: string) => {
-			const gen = getGenerator(value);
+			const generatorClass = getGenerator(value);
 
-			const expressGenerator = this.composeWith(
+			const generator = this.composeWith(
 				{
-					Generator: gen,
+					Generator: generatorClass,
 					path: path.join(path.resolve(path.dirname(this.__filename), "apps", value)),
 				},
 				{
@@ -359,13 +395,13 @@ export default class ProjectGenerator extends BaseGenerator {
 					install: this.options.install,
 					useDocker: this.options.useDocker,
 					useDockerCompose: this.options.useDockerCompose,
-					lang: this.options.lang,
+					lang: this.language,
 					appsList: this.options.appsList,
 					projectName: this.projectName,
 				},
 				true
 			);
-			this.generators.push({ name: value, generator: expressGenerator });
+			this.generators.push({ name: value, generator: generator });
 		});
 		this.services.setServices(this._getServices());
 	}
@@ -375,6 +411,7 @@ export default class ProjectGenerator extends BaseGenerator {
 			result[name] = {
 				appName: generator.options.appName,
 				port: generator.options.port,
+				color: generator.options.color,
 			};
 			return result;
 		}, {});
@@ -391,7 +428,6 @@ export default class ProjectGenerator extends BaseGenerator {
 	}
 
 	//Logs helpers
-
 	protected _logCompose(arr: string[], spinner: { clear: () => void; text: string }) {
 		spinner.clear();
 

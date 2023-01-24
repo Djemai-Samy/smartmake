@@ -9,7 +9,8 @@
 			"useTypescript": "Do you want to use typescript ?",
 			"useDocker": "Do You want to use Docker ?",
 			"useDockerCompose": "Do You want to use Docker compose ?",
-			"startServer": "Do you want to start the server?"
+			"startServer": "Do you want to start the server?",
+      "proceed":"Do you want to continue?"
 		},
 		"info": {
 			"usingYarn": "We are using Yarn !",
@@ -24,40 +25,41 @@
 			"notUsingDocker": "We are not using Docker in the project !",
 			"usingDockerCompose": "We are using Docker Compose in the project !",
 			"notUsingDockerCompose": "We are not using Docker Compose in the project !",
-      "dependencies":{
-        "install":"Installing dependecies...",
-        "installed":"Dependecies installed for"
-      }
+			"dependencies": {
+				"install": "Installing dependecies...",
+				"installed": "Dependecies installed for"
+			}
 		},
-    "error":{
-      "nameInvalid": "Ce nom n'est pas correct ! (Le nom doit être en minuscules et ne doit contenir que des caractères alphanumériques, des underscores et des tirets. Il doit commencer par une lettre et ne peut pas se terminer par un tiret ou un underscore.)",
-      "appNameExists": "Un dossier avec ce nom existe déjà !"
-    },
+		"error": {
+			"nameInvalid": "Ce nom n'est pas correct ! (Le nom doit être en minuscules et ne doit contenir que des caractères alphanumériques, des underscores et des tirets. Il doit commencer par une lettre et ne peut pas se terminer par un tiret ou un underscore.)",
+			"appNameExists": "Un dossier avec ce nom existe déjà !",
+			"noApp": "You need at least 1 app to continue!"
+		},
 		"server": {
 			"ready": "The server is running on port",
-      "error":{
-        "port":"This is not a valid port!",
-        "portUsed":"This port is already taken by another app!"
-      }
+			"error": {
+				"port": "This is not a valid port!",
+				"portUsed": "This port is already taken by another app!"
+			}
 		}
 	},
-  "compose":{
-    "commands":{
-      "dev":"Build the Development Images and deploy the Development Stack with Live Reload.",
-      "up":"Build the Production Images and deploy the Production Stack."
-    }
-  },
+	"compose": {
+		"commands": {
+			"dev": "Build the Development Images and deploy the Development Stack with Live Reload.",
+			"up": "Build the Production Images and deploy the Production Stack."
+		}
+	},
 	"express": {
 		"ask": {
 			"appName": "What's the name of the ExpressJS app ?",
 			"port": "Which port do you want to use for your ExpressJS app?"
 		},
 		"info": {},
-    "commands":{
-      "dev":"Launch the sever in development mode and Live Reload.",
-      "build":"Build the app.",
-      "start":"Start the server in pruduction mode."
-    },
+		"commands": {
+			"dev": "Launch the sever in development mode and Live Reload.",
+			"build": "Build the app.",
+			"start": "Start the server in pruduction mode."
+		},
 		"server": {},
 		"readme": {
 			"runServer": "Run the server"
@@ -69,13 +71,39 @@
 			"port": "Which port do you want to use for your ReactJS app?"
 		},
 		"info": {},
-    "commands":{
-      "dev":" Serve ht app in development mode and Live Reload.",
-      "build":"Build the app (Modification in webpack.config.js)."
-    },
+		"commands": {
+			"dev": " Serve the app in development mode and Live Reload.",
+			"build": "Build the app (Modifications in webpack.config.js)."
+		},
 		"server": {},
 		"readme": {
 			"runServer": "Run the server"
 		}
+	},
+	"start": {
+		"common": {
+			"ask": {
+				"task": "What do you want to do?",
+				"services": "Which service do you want to use?"
+			},
+			"error": {
+				"noService": "You need at least 1 service to continue!",
+				"noPackageFile": "package.json file not found!",
+				"noDockerDevFile": "docker-compose-dev.yaml file not found!",
+				"noDockerFile": "docker-compose.yaml file not found!!"
+			}
+		},
+    "react":{
+      "info":{
+        "express":"In production mode, your ReactJS app is served with ExpressJS form the public folder. Do you want to launch the build?",
+        "builded":"L'application ReactJS est construite!"
+      },
+      "warning":{
+        "nginx":"In production mode, you ReactJS app is served with Nginx. use docker instead!"
+      },
+      "error":{
+        "server":"You dont have a service to serve your ReactJS app in production mode!"
+      }
+    }
 	}
 }

@@ -3,7 +3,7 @@ import fse from "fs-extra";
 import { lang } from "../translate.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import BaseGenerator, { ProcessCallbacks } from "./BaseGenerator.js";
+import BaseGenerator from "./BaseGenerator.js";
 import { error, info, log, magic, success, sep } from "../utils/log.js";
 import { ask } from "../utils/ask.js";
 import fs from "fs";
@@ -85,30 +85,38 @@ export default class extends BaseGenerator {
 		if (!this.options.install) {
 			return;
 		}
-    const text = await lang.getInstance(this.options.lang);
-		const spinner = ora(text.t('common.info.dependecies.install'));
+		const text = await lang.getInstance(this.options.lang);
+		const spinner = ora(text.t("common.info.dependecies.install"));
 		spinner.start();
 		await new Promise<void>((resolve, reject) => {
 			this._spawnCommandApp(
 				`${this.packageManager} install`,
 				{
 					stdout: (arr) => {
-						spinner.text = `${chalk.hex(this.color).bold(this.appName)}: ${arr.join("\n")}`;
+						spinner.text = `${chalk.hex(this.color).bold(this.appName)}: ${arr.join(
+							"\n"
+						)}`;
 					},
 					stderr: (arr) => {
-						spinner.text = `${chalk.hex(this.color).bold(this.appName)}: ${arr.join("\n")}`;
+						spinner.text = `${chalk.hex(this.color).bold(this.appName)}: ${arr.join(
+							"\n"
+						)}`;
 					},
 					exit: (code, arr) => {
-						spinner.text = `${chalk.hex(this.color).bold(this.appName)}: ${arr.join("\n")}`;
+						spinner.clear()
 					},
 					close: (code, arr) => {
-            log(chalk.hex(this.color).bold(`${text.t('common.info.dependencies.installed')}: ${this.appName}`))
-            spinner.text = `${this.appName}: ${arr.join("\n")}`;
+						log(
+							chalk
+								.hex(this.color)
+								.bold(`${text.t("common.info.dependencies.installed")}: ${this.appName}`)
+						);
+						spinner.clear()
 						resolve();
 					},
 					error: (err) => {
-            log(`Error for ${this.appName}: ${err}`)
-          },
+						log(`Error for ${this.appName}: ${err}`);
+					},
 				},
 				false
 			);
@@ -117,8 +125,7 @@ export default class extends BaseGenerator {
 		spinner.stop();
 		const useTypescript = this.options.useTypescript;
 
-    this._showStartDoc(text);
-
+		this._showStartDoc(text);
 	}
 	async end() {
 		const text = await lang.getInstance(this.options.lang);
@@ -139,24 +146,25 @@ export default class extends BaseGenerator {
 
 			// No Docker
 			if (!this.options.useDocker) {
-				this._spawnCommandApp(`${this.packageManager} run dev`, {
+				//Adding some timestamp to the log
+				const date = new Date();
+				const dateFormat = `${date.toLocaleString()}`;
+
+        const spinner = ora("Stating server...");
+				spinner.start();
+				
+        this._spawnCommandApp(`${this.packageManager} run dev`, {
 					stdout: (arr) => {
-						this._logLines(`${this.packageManager} run dev`, arr);
-						// header({
-						//   title: `${this.appName}`,
-						//   tagLine: `yarn run dev`,
-						//   description: arr,
-						//   version: "",
-						//   bgColor: this.color,
-						//   color: "#000000",
-						//   bold: true,
-						//   clear: false,
-						// });
+            spinner.clear();
+						this._logLines(`${date.toLocaleString()}`, arr);
+            //Show stop command in the spinner
+			      spinner.text = `${chalk.green("Waiting...")} 'CTRL + C' to ${chalk.red("stop!")}`;
 					},
 					stderr: (arr) => {
+            spinner.clear();
 						header({
 							title: `${this.appName}`,
-							tagLine: `[INFO]`,
+							tagLine: `${dateFormat}`,
 							description: arr,
 							version: "",
 							bgColor: this.color,
@@ -164,6 +172,7 @@ export default class extends BaseGenerator {
 							bold: true,
 							clear: false,
 						});
+            spinner.text = `${chalk.green("Waiting...")} 'CTRL + C' to ${chalk.red("stop!")}`;
 					},
 					exit: (code, arr) => {
 						header({
@@ -176,8 +185,10 @@ export default class extends BaseGenerator {
 							bold: true,
 							clear: false,
 						});
+            spinner.clear();
 					},
 					close: (code, arr) => {
+            spinner.clear();
 						header({
 							title: `${this.appName}`,
 							tagLine: `Closed!`,
@@ -188,6 +199,7 @@ export default class extends BaseGenerator {
 							bold: true,
 							clear: false,
 						});
+            spinner.stop();
 					},
 					error: (err) => {},
 				});
@@ -204,6 +216,7 @@ export default class extends BaseGenerator {
 		this.services.addServices(this.template.split("/")[0], {
 			appName: this.appName,
 			port: this.port,
+			color: this.color,
 		});
 	}
 
@@ -225,7 +238,7 @@ export default class extends BaseGenerator {
 		};
 	}
 
-  protected _showStartDoc(text: typeof import("i18next")){}
+	protected _showStartDoc(text: typeof import("i18next")) {}
 
 	//Generator Loaders
 	private _loadTypescript() {

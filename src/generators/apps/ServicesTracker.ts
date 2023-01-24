@@ -1,4 +1,4 @@
-export type Services = Record<string, { appName: string; port: string }>;
+export type Services = Record<string, { appName: string; port: string, color:string }>;
 export class ServicesTracker {
 	private static instance: ServicesTracker;
 	private services: Services;
@@ -13,7 +13,7 @@ export class ServicesTracker {
 		return ServicesTracker.instance;
 	}
 
-	addServices(key:string, service: {appName: string, port:string}): void {
+	addServices(key:string, service: {appName: string, port:string, color:string}): void {
 		this.services[key] = service;
 	}
 

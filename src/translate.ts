@@ -1,7 +1,13 @@
-import * as i18next from 'i18next';
-import * as path from 'path';
-import Backend from 'i18next-node-fs-backend';
-import { fileURLToPath } from 'url';
+import * as i18next from "i18next";
+import * as path from "path";
+import Backend from "i18next-node-fs-backend";
+import { fileURLToPath } from "url";
+
+export const languages = [
+	{ name: "Français", value: "fr" },
+	{ name: "English", value: "en" },
+];
+
 export const lang = (function () {
 	var instance: typeof i18next;
 
@@ -11,16 +17,16 @@ export const lang = (function () {
 
 		await i18next.use(Backend).init({
 			lng: lng,
-			fallbackLng: 'en',
+			fallbackLng: "en",
 			debug: false,
-			keySeparator: '.',
+			keySeparator: ".",
 			backend: {
-				loadPath: path.join(__dirname, `/${lng}/translation.json`)
-			}
+				loadPath: path.join(__dirname, `/${lng}/translation.json`),
+			},
 		});
 		return i18next;
 	}
-	const getInstance = async (lng: string) => {
+	const getInstance = async (lng: string = 'en') => {
 		if (!instance) {
 			instance = await createInstance(lng);
 		}
@@ -28,6 +34,12 @@ export const lang = (function () {
 	};
 
 	return {
-		getInstance
+		getInstance,
 	};
 })();
+
+
+
+export const isValidLanguage = (language: string) => {
+  return languages.some(l => l.value === language);
+};

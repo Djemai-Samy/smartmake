@@ -1,26 +1,10 @@
 import meow from "meow";
 import meowHelp from "cli-meow-help";
+import chalk from "chalk";
 
 type AnyFlags = Record<string, any>;
 
 const flags = {
-	// clear: {
-	// 	type: `boolean`,
-	// 	default: true,
-	// 	alias: `c`,
-	// 	desc: `Clear the console`,
-	// },
-	// noClear: {
-	// 	type: `boolean`,
-	// 	default: false,
-	// 	desc: `Don't clear the console`,
-	// },
-	debug: {
-		type: `boolean`,
-		default: false,
-		alias: `d`,
-		desc: `Print debug info`,
-	},
 	version: {
 		type: `boolean`,
 		alias: `v`,
@@ -29,12 +13,12 @@ const flags = {
 	language: {
 		type: `string`,
 		alias: `l`,
-		desc: `Choose your language: [fr, en]`,
+		desc: `Choose your language: [fr, en] -> ${chalk.green('en with --yes')}`,
 	},
 	useTypescript: {
 		type: "boolean",
 		alias: "t",
-		desc: "Use typescript",
+		desc: `Use typescript -> ${chalk.green('default with --yes')}`,
 	},
 	useJavascript: {
 		type: "boolean",
@@ -43,7 +27,7 @@ const flags = {
 	},
 	useYarn: {
 		type: `boolean`,
-		desc: `Use Yarn`,
+		desc: `Use Yarn -> ${chalk.green('default with --yes')}`,
 	},
 	useNpm: {
 		type: `boolean`,
@@ -52,7 +36,7 @@ const flags = {
 	install: {
 		type: `boolean`,
 		alias: `i`,
-		desc: `Install dependencies`,
+		desc: `Install dependencies -> ${chalk.green('default with --yes')}`,
 	},
 	noInstall: {
 		type: `boolean`,
@@ -61,22 +45,44 @@ const flags = {
 	docker: {
 		type: `boolean`,
 		alias: `d`,
-		desc: `Use docker for the project`,
+		desc: `Use docker for the project -> ${chalk.green('default with --yes')}`,
 	},
 	noDocker: {
 		type: `boolean`,
 		desc: `Don't use docker for the project`,
 	},
+  yes: {
+		type: `boolean`,
+		alias: `y`,
+		desc: `Apply -> ${chalk.green('--language en --useTypescript --useYarn --install --docker')}.`,
+	},
 } as AnyFlags;
 
 const commands = {
 	help: { desc: `Print help info` },
-	// express: { desc: "Creating an ExpressJS project" },
-	// react: { desc: "Creating a ReactJS project" },
+	express: { desc: "Create an ExpressJS project" },
+	react: { desc: "Create a ReactJS project" },
 };
 
 const helpText = meowHelp({
-	name: `smartmake`,
+	name: `smartmake create`,
+	examples: [
+		{
+			command: ``,
+		},
+		{
+			command: ``,
+			flags: ["useTypescript", "docker"],
+		},
+		{
+			command: `react`,
+			flags: ["useYarn", "install"],
+		},
+		{
+			command: `react express`,
+			flags: ["language fr","useTypescript", "useYarn", "install", "docker"],
+		},
+	],
 	flags,
 	commands,
 });
@@ -89,15 +95,16 @@ const options = {
 	flags,
 };
 
-export default meow(helpText, {
+export default meow(`${helpText}`, {
 	inferType: true,
 	importMeta: import.meta,
-	description: "true",
+	description: "Create quickly and easily multiple apps.",
 	hardRejection: false,
 	flags: flags,
 });
 
 export type Options = {
+  yes:boolean;
 	lang: string;
 	useTypescript: boolean;
 	useJavascript: boolean;
