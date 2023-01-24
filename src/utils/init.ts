@@ -14,7 +14,7 @@ export default (options: any) => {
     title: `smartmake🔥`,
     tagLine: `by Djemai Samy`,
     description: ["A flexible app generator and manager!"],
-    version: "1.0.1",
+    version: "1.0.2",
     bgColor: '#36BB09',
     color: '#000000',
     bold: true,

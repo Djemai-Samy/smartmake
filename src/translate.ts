@@ -1,6 +1,6 @@
 import * as i18next from "i18next";
 import * as path from "path";
-import Backend from "i18next-node-fs-backend";
+import Backend from "i18next-fs-backend";
 import { fileURLToPath } from "url";
 
 export const languages = [

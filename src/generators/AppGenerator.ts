@@ -81,7 +81,7 @@ export default class extends BaseGenerator {
 			return;
 		}
 		const text = await lang.getInstance(this.options.lang);
-		const spinner = ora(text.t("common.info.dependecies.install"));
+		const spinner = ora(text.t("common.info.dependencies.install"));
 		spinner.start();
 		await new Promise<void>((resolve, reject) => {
 			this._spawnCommandApp(
